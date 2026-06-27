@@ -1,3 +1,29 @@
 {
-  "hooks": {}
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${PLUGIN_ROOT}/hooks/mergeability-context.js",
+            "commandWindows": "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js')\"",
+            "statusMessage": "Loading mergeability context"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${PLUGIN_ROOT}/hooks/mergeability-context.js",
+            "commandWindows": "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js')\"",
+            "statusMessage": "Loading mergeability context"
+          }
+        ]
+      }
+    ]
+  }
 }
