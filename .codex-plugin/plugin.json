@@ -1,0 +1,24 @@
+{
+  "name": "velkross",
+  "version": "0.0.1",
+  "description": "Velkross plugin",
+  "author": {
+    "name": "Hudrazine",
+    "url": "https://github.com/hudrazine"
+  },
+  "homepage": "https://github.com/hudrazine/velkross",
+  "repository": "https://github.com/hudrazine/velkross",
+  "license": "MIT",
+  "keywords": [],
+  "skills": "./skills/",
+  "hooks": "./hooks/codex-hooks.json",
+  "interface": {
+    "displayName": "Velkross",
+    "shortDescription": "Use Velkross in Codex.",
+    "longDescription": "Velkross adds repository-local Codex plugin hooks and skills.",
+    "developerName": "Hudrazine",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Help me use Velkross."
+  }
+}

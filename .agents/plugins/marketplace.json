@@ -1,0 +1,21 @@
+{
+  "name": "velkross",
+  "interface": {
+    "displayName": "Velkross"
+  },
+  "plugins": [
+    {
+      "name": "velkross",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/hudrazine/velkross.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
