@@ -7,160 +7,97 @@ description: "Use this skill to read, write, update, search, or organize repo-lo
 
 A persistent memory space for storing knowledge that survives across conversations.
 
-**Location:** `.agents/skills/agent-memory/memories/`
+## Memory Root
 
-## Proactive Usage
+Store memories in `<repository root>/.memories/`.
 
-Save memories when you discover something worth preserving:
+- If `.memories/` does not exist, treat it as empty.
+- Create `.memories/` only when saving a memory.
+- Memory files are project-local and intentionally gitignored.
 
-- Research findings that took effort to uncover
-- Non-obvious patterns or gotchas in the codebase
-- Solutions to tricky problems
-- Architectural decisions and their rationale
-- In-progress work that may be resumed later
+## Workflow
 
-Check memories when starting related work:
+1. Check relevant memories before related work, especially when investigating a familiar area or resuming interrupted work.
+2. Save durable project context after useful discoveries, non-obvious fixes, architectural decisions, gotchas, or handoff-worthy in-progress work.
+3. Maintain existing memories when facts change, work completes, or scattered notes should be consolidated.
 
-- Before investigating a problem area
-- When working on a feature you've touched before
-- When resuming work after a conversation break
+## Find Memories
 
-Organize memories when needed:
+Use a summary-first approach. The `summary` frontmatter is the decision point for whether to read the full memory.
 
-- Consolidate scattered memories on the same topic
-- Remove outdated or superseded information
-- Update status field when work completes, gets blocked, or is abandoned
+If `rg` is available, include `--no-ignore --hidden` when searching `.memories/`, because memory files are normally gitignored.
 
-## Folder Structure
-
-When possible, organize memories into category folders. No predefined structure - create categories that make sense for the content.
-
-Guidelines:
-
-- Use kebab-case for folder and file names.
-- Consolidate or reorganize as the knowledge base evolves.
-
-Example:
-
-```text
-memories/
-├─ file-processing/
-│  ├─ large-file-memory-issue.md
-│  └─ supported-encoding-decisions.md
-├─ dependencies/
-│  └─ iconv-esm-problem.md
-└─ project-context/
-    └─ deployment-constraints.md
+```bash
+rg --no-ignore --hidden "^summary:" .memories/
+rg --no-ignore --hidden -i "^summary:.*keyword" .memories/
+rg --no-ignore --hidden -i "^tags:.*keyword" .memories/
+rg --no-ignore --hidden -i "keyword" .memories/
 ```
 
-This is just an example. Structure freely based on actual content.
+Read the relevant files after the summary or tag search identifies likely matches.
 
-## Frontmatter
+## Write Memories
+
+Before saving a new memory, search existing summaries to avoid duplicates. Update or consolidate an existing memory when it already covers the same topic.
+
+Use category folders when they help retrieval. Use kebab-case for folder and file names.
+
+```text
+.memories/
+|-- file-processing/
+|   |-- large-file-memory-issue.md
+|   `-- supported-encoding-decisions.md
+|-- dependencies/
+|   `-- iconv-esm-problem.md
+`-- project-context/
+    `-- deployment-constraints.md
+```
 
 All memories must include frontmatter with a `summary` field. The summary should be concise enough to determine whether to read the full content.
 
-**Summary is the decision point**: Agents scan summaries via `rg "^summary:"` to decide which memories to read in full. Write summaries that contain enough context to make this decision - what the memory is about, the key problem or topic, and why it matters.
+Write summaries with enough context to identify the topic, the key problem or decision, and why it matters.
 
 **Required:**
 
 ```yaml
 ---
 summary: "1-2 line description of what this memory contains"
-created: 2025-01-15 # YYYY-MM-DD format
+created: 2026-06-13
 ---
 ```
+
+Use the current date in `YYYY-MM-DD` format for `created` and `updated`.
 
 **Optional:**
 
 ```yaml
 ---
 summary: "Worker thread memory leak during large file processing - cause and solution"
-created: 2025-01-15
-updated: 2025-01-20
+created: 2026-06-13
+updated: 2026-06-18
 status: in-progress # in-progress | resolved | blocked | abandoned
 tags: [performance, worker, memory-leak]
 related: [src/core/file/fileProcessor.ts]
 ---
 ```
 
-## Search Workflow
+Use any available file-editing method to create or update Markdown files. Check whether the target file already exists before writing to avoid accidental overwrites.
 
-Use a summary-first approach to efficiently find relevant memories.
+Write each memory so another agent can resume without the original conversation. Capture the key context, decisions, rationale, current state, and next steps.
 
-Memory files are intentionally gitignored. Use shell commands in this workflow, such as `rg` and `ls`, and always include `--no-ignore --hidden` immediately after `rg` when searching or listing memories with ripgrep.
-
-```bash
-# 1. List categories
-ls .agents/skills/agent-memory/memories/
-
-# 2. List memory files with ripgrep
-rg --no-ignore --hidden --files .agents/skills/agent-memory/memories/
-
-# 3. View all summaries
-rg --no-ignore --hidden "^summary:" .agents/skills/agent-memory/memories/
-
-# 4. Search summaries for keyword
-rg --no-ignore --hidden -i "^summary:.*keyword" .agents/skills/agent-memory/memories/
-
-# 5. Search by tag
-rg --no-ignore --hidden -i "^tags:.*keyword" .agents/skills/agent-memory/memories/
-
-# 6. Full-text search when summary/tag search is not enough
-rg --no-ignore --hidden -i "keyword" .agents/skills/agent-memory/memories/
-
-# 7. Read specific memory file if relevant
-```
-
-## Operations
-
-### Save
-
-1. Determine appropriate category for the content.
-2. Check if existing category fits, or create new one.
-3. Write file with required frontmatter (use `date +%Y-%m-%d` for current date).
-
-```bash
-mkdir -p .agents/skills/agent-memory/memories/category-name/
-# Note: Check if file exists before writing to avoid accidental overwrites
-cat > .agents/skills/agent-memory/memories/category-name/filename.md << 'EOF'
----
-summary: "Brief description of this memory"
-created: 2025-01-15
----
-
-# Title
-
-Content here...
-EOF
-```
-
-### Maintain
-
-- **Update**: When information changes, update the content and add `updated` field to frontmatter.
-- **Delete**: Remove memories that are no longer relevant.
-  ```bash
-  trash .agents/skills/agent-memory/memories/category-name/filename.md
-  # Remove empty category folders
-  rmdir .agents/skills/agent-memory/memories/category-name/ 2>/dev/null || true
-  ```
-- **Consolidate**: Merge related memories when they grow.
-- **Reorganize**: Move memories to better-fitting categories as the knowledge base evolves.
-
-## Guidelines
-
-1. **Write for handoff**: Memories exist so another agent can resume the work later. Capture all key points needed to continue without access to the original conversation - decisions made, reasons why, current state, and next steps.
-2. **Write self-contained notes**: Assume the receiving agent has no prior context. Include enough information to understand and act on the content.
-3. **Keep summaries decisive**: The summary should help a receiving agent decide whether the full memory is relevant before reading it.
-4. **Stay current**: Update or delete outdated information.
-5. **Be practical**: Save what's actually useful, not everything.
-
-## Content Reference
-
-When writing detailed memories, consider including:
+Useful sections include:
 
 - **Context**: Goal, background, constraints
 - **State**: What's done, in progress, or blocked
 - **Details**: Key files, commands, code snippets
 - **Next steps**: What to do next, open questions
 
-Not all memories need all sections - use what's relevant.
+Not all memories need all sections. Save what is useful, not everything.
+
+## Maintain Memories
+
+- **Update**: When information changes, update the content and add or refresh the `updated` field.
+- **Status**: Use `status` for work state when helpful: `in-progress`, `resolved`, `blocked`, or `abandoned`.
+- **Consolidate**: Merge related memories when multiple notes cover the same topic.
+- **Reorganize**: Move memories to better-fitting categories as the knowledge base evolves.
+- **Delete**: Remove memories that are no longer relevant, using the available file operation for the environment.
