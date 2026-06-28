@@ -2,6 +2,10 @@
 
 Guidance for AI coding agents working in this repository.
 
+## Project Overview
+
+Velkross is an agent harness plugin that packages Mergeability-first Engineering guidance, hooks, and reusable skills for AI coding agents. The project is intended to support harnesses such as Codex, Claude Code, and Cursor while keeping the shared engineering behavior consistent across adapters.
+
 ## Git
 
 - Format commit messages as Conventional Commits: `<type>(<scope>): <summary>`.
