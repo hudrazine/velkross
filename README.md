@@ -68,22 +68,18 @@ Disable or remove the Velkross Cursor adapter from your Cursor configuration, th
 
 Once installed, Velkross should apply its mergeability guidance through the host harness lifecycle. In normal coding sessions, you can ask your agent to implement, review, debug, or refactor as usual; Velkross adds the shared engineering judgment in the background.
 
-Bundled skills can also be invoked explicitly when your harness supports direct skill or plugin invocation. Use explicit invocation when you want the agent to follow a specific Velkross workflow, such as maintaining repo-local memory.
+Bundled skills can also be invoked explicitly when your harness supports direct skill or plugin invocation. Use them when you want a specific Velkross workflow for memory, review, or other focused engineering tasks.
 
-## Included workflows
+## Core guidance
 
-### Mergeability-first Engineering
+Mergeability-first Engineering is the default guidance bundled with Velkross. It gives agents a steady implementation bias toward changes that preserve maintainability, correctness, type safety, architectural boundaries, and practical testability.
 
-Mergeability-first Engineering is the default implementation guidance bundled with Velkross. It encourages AI agents to produce code that preserves maintainability, correctness, type safety, architectural boundaries, and practical testability.
+## Skills
 
-### Agent Memory
-
-Agent Memory is a repo-local memory workflow for preserving useful project context across conversations. It is intended for notes such as:
-
-- architectural decisions
-- solved problems and gotchas
-- restart or handoff context
-- in-progress investigation notes
+| Skill               | Use it for                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| `agent-memory`      | Save, recall, and organize repo-local project context across conversations.          |
+| `complexity-review` | Review code, diffs, or snippets for unjustified complexity and safe simplifications. |
 
 ## Why this exists
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Complexity Review"
+  short_description: "Review unjustified code complexity"
+  default_prompt: "Use $complexity-review to review this diff for unjustified complexity."
