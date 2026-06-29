@@ -2,45 +2,61 @@
 
 Deliver code that is ready to review and merge, not merely code that appears to work.
 
-## Durable change
+Use these rules as the shared engineering center of gravity for implementation decisions. Optimize for correctness, maintainability, explicit contracts, architectural fit, and practical verifiability.
 
-- Prefer the smallest durable change, not the smallest diff. Durable means the change preserves or improves correctness, maintainability, type safety, and architectural boundaries. A tiny patch in the wrong layer is not durable; it is future rework.
-- Stay within the requested scope. Improve code directly touched by the task when it improves correctness or maintainability, but avoid broad rewrites, unrelated cleanup, dependency changes, public API changes, compatibility layers, or formatting-only churn unless explicitly requested.
-- Prefer deletion over addition, boring over clever, and fewer moving parts over more. Keep changes local when that preserves the existing architecture, but do not put logic in the wrong layer merely to reduce file count.
+## Core standard
+
+- Prefer the smallest durable change, not the smallest diff. A durable change preserves or improves correctness, maintainability, type safety, behavioral contracts, and architectural boundaries.
+- Small is good only when the change is made in the right layer and preserves the existing contract. A tiny patch in the wrong place is future rework.
+- When principles conflict, preserve correctness, explicit contracts, type safety, and architectural boundaries before optimizing for convenience, diff size, or local cleanup.
+- Leave code easy for a human reviewer to understand. Express intent through names, types, structure, and focused tests. Add short nearby comments only for non-obvious constraints, invariants, or tradeoffs.
+
+## Change scope and durability
+
+- Stay within the requested scope. Fix or improve code directly touched by the task when it materially improves correctness, maintainability, or clarity.
+- Avoid broad rewrites, unrelated cleanup, dependency changes, public API changes, compatibility layers, formatting-only churn, or large structural moves unless they are required by the task.
+- Prefer deletion over addition, boring over clever, and fewer moving parts over more.
+- Keep changes local when that fits the existing architecture. Do not place logic in the wrong layer merely to reduce file count or diff size.
 - Prefer the smallest obvious implementation. Do not compress code into clever one-liners when named intermediate steps are easier to read, type-check, test, or debug.
 
-## Reuse and local consistency
+## Existing design and reuse
 
-- Existing implementation patterns are part of the design. Match the local approach for the same kind of behavior, including domain models, utilities, naming, test style, and error conventions. Do not introduce a new pattern unless the existing one is clearly insufficient; if you do, make the reason explicit.
-- New code must justify itself against this ladder:
+- Existing implementation patterns are part of the design. Match the local approach for the same kind of behavior, including domain models, utilities, naming, state management, error conventions, and test style.
+- Do not introduce a new pattern merely because it seems cleaner in isolation. Introduce a new pattern only when the existing one is clearly insufficient for the requested change, and make the reason visible through naming, structure, tests, or a short nearby comment.
+- Before adding new implementation, confirm that the behavior is required by the requested scope and is not already covered by an existing project model, helper, utility, pattern, convention, standard/runtime/platform capability, already-adopted framework feature, or approved dependency. Add only the minimum durable implementation that remains after those checks.
+- Avoid duplicating existing domain logic, validation rules, error mapping, serialization, state transitions, or formatting conventions unless the existing abstraction is clearly the wrong fit.
 
-  1. Is this behavior necessary for the requested scope, or is it YAGNI?
-  2. Does the codebase already provide a helper, utility, domain model, pattern, or convention for it?
-  3. Does the standard library already cover it?
-  4. Does a native platform feature cover it?
-  5. Does an approved dependency already used by the project cover it without adding inappropriate coupling?
-  6. Only then, add the minimum durable implementation.
+## Boundaries, contracts, types, and state
 
-## Boundaries, types, and state
+- Do not weaken contracts or type safety to make implementation easier. Avoid unsafe escape hatches, unchecked assumptions, overly broad types, silent coercion, and assertions that merely suppress uncertainty.
+- Make invalid states hard to represent. Prefer explicit domain types, narrow interfaces, validated inputs at boundaries, and state models with clear allowed transitions.
+- Avoid boolean flag combinations that create unclear or impossible states. Prefer named states, structured variants, or explicit lifecycle models when behavior depends on state.
+- Keep domain logic, I/O, persistence, state management, and presentation concerns separated. Isolate side effects at clear boundaries.
+- Do not pass infrastructure details through layers that should remain domain-focused.
+- Preserve observable behavior, public APIs, and data contracts unless the task explicitly changes them. This includes API shapes, persistence formats, lifecycle assumptions, ordering guarantees, ownership rules, error behavior, and user-visible behavior.
+- Prefer explicit constraints over implicit assumptions. When code depends on a limit, invariant, ordering guarantee, lifecycle rule, ownership rule, or environmental assumption, make that constraint visible in the type, API, validation, or a short nearby comment.
 
-- Do not weaken type safety to make the implementation easier. Avoid language-specific escape hatches such as `any`, unsafe casts, non-null assertions, unchecked assumptions, duplicated logic, silent fallbacks, and boolean state flags that create unclear combinations. Prefer explicit domain types, narrow interfaces, validated inputs at boundaries, and state models that make invalid states hard to represent.
-- Keep domain logic, I/O, state management, and presentation concerns separated. Isolate side effects at clear boundaries. Do not pass infrastructure details through layers that should remain domain-focused.
-- Prefer explicit constraints over implicit assumptions. When an implementation depends on a limit, invariant, ordering guarantee, lifecycle assumption, ownership rule, or environmental assumption, make that constraint visible in the type, API, validation, or a short nearby comment.
+## Root causes, errors, and required safeguards
 
-## Root causes and error semantics
+- For bug fixes, treat the report as a symptom, not the diagnosis. Find and fix the shared root cause rather than adding path-specific guards that leave equivalent callers broken.
+- Preserve error semantics. Do not swallow errors, hide failures behind default values, add silent fallback behavior, or convert failures into ambiguous states unless that behavior is part of the existing contract.
+- If fallback behavior is required, make its trigger, scope, and observable result explicit.
+- Treat validation at trust boundaries, data-loss prevention, security, accessibility where applicable, and explicitly required behavior as correctness requirements, not optional polish.
+- Do not introduce behavior that makes failures harder to detect, debug, test, or recover from.
 
-- For bug fixes, treat the report as a symptom, not the diagnosis. Fix the shared root cause rather than adding path-specific guards that leave equivalent callers broken.
-- Preserve error semantics. Do not swallow errors, add silent fallback behavior, or convert failures into ambiguous states unless that behavior is part of the behavioral contract.
-- Do not be "lazy" about validation at trust boundaries, data-loss prevention, security, accessibility where applicable, or behavior explicitly required by the task.
+## Simplicity and abstraction
 
-## Intentional simplification
+- Prefer simple implementations when they preserve the behavioral contract and architectural boundaries.
+- Avoid speculative abstraction. Add an abstraction only when it removes real duplication, clarifies a domain concept, isolates a real boundary, or makes a known required change safer.
+- Do not add configuration surfaces, adapters, compatibility layers, generic frameworks, or extension points for hypothetical future needs.
+- Intentional simplifications that limit behavior, scalability, or compatibility must have a clear ceiling. Name the constraint, why it is acceptable now, and the upgrade path if the constraint stops holding.
+- Simplicity must not come from ignoring edge cases, weakening validation, collapsing distinct states, or moving responsibility into the wrong layer.
 
-- Simple implementations are preferred when they preserve the behavioral contract and architectural boundaries.
-- Intentional simplifications must have a clear ceiling. Name the constraint, why it is acceptable now, and the upgrade path if the constraint stops holding.
-- Avoid speculative abstraction. Add an abstraction only when it removes real duplication, clarifies a domain concept, isolates a real boundary, or makes future required change safer.
+## Verification and reviewability
 
-## Testability and verification
-
-- Tests should prove behavior, not implementation details. When behavior changes, add or update focused tests for the observable contract, including plausible edge cases and failure paths. Non-trivial logic should leave behind at least one runnable check that would fail if the logic regresses.
-- Do not remove or weaken tests unless the behavior contract changed intentionally.
-- Changes should be practically verifiable. Prefer designs that can be checked with focused behavior tests and broader project-level checks when risk warrants them.
+- Tests should prove observable behavior, not implementation details.
+- When behavior changes, add or update focused tests for the contract being changed, including plausible edge cases and failure paths.
+- Non-trivial logic should leave behind at least one runnable check that would fail if the logic regresses.
+- Do not remove, skip, or weaken tests unless the behavior contract changed intentionally.
+- Use proportionate verification. Prefer focused behavior tests for local logic and broader project-level checks when integration risk, persistence, concurrency, security, or user-visible behavior warrants it.
+- A change is not merge-ready merely because the happy path works. It should be understandable, scoped, consistent with the existing design, safe at boundaries, and practically verifiable.
