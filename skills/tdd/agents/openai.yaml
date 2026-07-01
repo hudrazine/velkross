@@ -1,0 +1,4 @@
+interface:
+  display_name: "TDD"
+  short_description: "Practical test-driven development loop"
+  default_prompt: "Use $tdd to implement this behavior with a practical List → Red → Green → Refactor loop."
