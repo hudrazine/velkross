@@ -76,11 +76,12 @@ Mergeability-first Engineering is the default guidance bundled with Velkross. It
 
 ## Skills
 
-| Skill               | Use it for                                                                           |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| `agent-memory`      | Save, recall, and organize repo-local project context across conversations.          |
-| `complexity-review` | Review code, diffs, or snippets for unjustified complexity and safe simplifications. |
-| `tdd`               | Drive behavior changes with a practical List → Red → Green → Refactor loop.          |
+| Skill                | Use it for                                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `agent-memory`       | Save, recall, and organize repo-local project context across conversations.                           |
+| `clarify-or-proceed` | Decide whether to clarify, assume, investigate, compare options, or proceed when a task is ambiguous. |
+| `complexity-review`  | Review code, diffs, or snippets for unjustified complexity and safe simplifications.                  |
+| `tdd`                | Drive behavior changes with a practical List → Red → Green → Refactor loop.                           |
 
 ## Why this exists
 
