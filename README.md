@@ -76,13 +76,14 @@ Mergeability-first Engineering is the default guidance bundled with Velkross. It
 
 ## Skills
 
-| Skill                | Use it for                                                                                            |
-| -------------------- | ----------------------------------------------------------------------------------------------------- |
-| `agent-memory`       | Save, recall, and organize repo-local project context across conversations.                           |
-| `clarify-or-proceed` | Decide whether to clarify, assume, investigate, compare options, or proceed when a task is ambiguous. |
-| `complexity-review`  | Review code, diffs, or snippets for unjustified complexity and safe simplifications.                  |
-| `tdd`                | Drive behavior changes with a practical List → Red → Green → Refactor loop.                           |
-| `to-issues`          | Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.               |
+| Skill                 | Use it for                                                                                            |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| `agent-memory`        | Save, recall, and organize repo-local project context across conversations.                           |
+| `clarify-or-proceed`  | Decide whether to clarify, assume, investigate, compare options, or proceed when a task is ambiguous. |
+| `complexity-review`   | Review code, diffs, or snippets for unjustified complexity and safe simplifications.                  |
+| `manage-project-docs` | Maintain repository docs, including docs/README.md as the project-doc router.                         |
+| `tdd`                 | Drive behavior changes with a practical List → Red → Green → Refactor loop.                           |
+| `to-issues`           | Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.               |
 
 ## Why this exists
 

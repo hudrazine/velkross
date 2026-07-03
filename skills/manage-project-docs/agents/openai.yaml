@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Docs Manager"
+  short_description: "Keep repository docs/ organized and trustworthy"
+  default_prompt: "Use $manage-project-docs to audit, organize, or maintain this repository's docs/."
