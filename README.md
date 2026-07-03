@@ -82,6 +82,7 @@ Mergeability-first Engineering is the default guidance bundled with Velkross. It
 | `clarify-or-proceed`  | Decide whether to clarify, assume, investigate, compare options, or proceed when a task is ambiguous. |
 | `complexity-review`   | Review code, diffs, or snippets for unjustified complexity and safe simplifications.                  |
 | `manage-project-docs` | Maintain repository docs, including docs/README.md as the project-doc router.                         |
+| `pressure-test`       | Test key assumptions, tradeoffs, and AI-user alignment before implementation.                         |
 | `tdd`                 | Drive behavior changes with a practical List → Red → Green → Refactor loop.                           |
 | `to-issues`           | Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.               |
 

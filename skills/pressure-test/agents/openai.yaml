@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pressure Test"
+  short_description: "Pressure-test key assumptions one question at a time"
+  default_prompt: "Use $pressure-test to align on this plan before implementation, one high-impact question at a time."
