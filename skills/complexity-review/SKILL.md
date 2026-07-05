@@ -1,43 +1,37 @@
 ---
 name: complexity-review
-description: Review code, diffs, or snippets for unnecessary or unjustified complexity. Use for simplification-focused reviews that look for needless abstractions, unused options, redundant dependencies, avoidable state, duplicated logic, or over-engineering. Not for general correctness, security, performance, accessibility, or architecture review.
+description: Review implemented code, diffs, or snippets for unnecessary or unjustified complexity. Use for simplification-focused reviews that look for needless abstractions, unused options, redundant dependencies, avoidable state, duplicated logic, or over-engineering. Avoid for implementation planning, general correctness, security, performance, accessibility, or architecture review.
 ---
 
 # Complexity Review
 
-## Role
+## Purpose
 
 Review the provided code, diff, or snippet for complexity that lacks a current, evidence-backed reason to exist.
 
-This is a focused complexity review. It is not a general correctness, security, performance, accessibility, or architecture review.
-
-## Goal
-
 Produce an evidence-backed simplification review that reduces unjustified maintenance surface while preserving behavior, safety, compatibility, readability, and reviewability.
 
-The target is justified simplicity, not fewer lines. Do not reward code golf or suggest a shorter version that is harder to understand.
+This is a focused complexity review. It is not an implementation-planning, general correctness, security, performance, accessibility, or architecture review.
 
-## Scope
+## Core Standard
 
-Prefer local simplifications that preserve the current behavior and contract.
+Optimize for justified simplicity, not fewer lines.
 
-Do not recommend redesigns, broad rewrites, module moves, public API changes, compatibility changes, or harness-boundary changes unless the user explicitly asks for that scope.
+Report complexity only when the available evidence shows it lacks a current reason to exist and can be simplified without changing behavior, weakening safety, breaking contracts, reducing readability, or removing useful verification.
 
-## Reportable simplifications
+Do not reward code golf or suggest a shorter version that is harder to understand.
 
-Report a simplification only when it is:
+## Review Procedure
 
-- behavior-preserving
-- concrete and local enough to review
-- supported by the available code, diff, snippet, tests, configuration, documentation, or package usage
-- scoped to what the available context can prove
-- not weakening protected complexity
+1. Identify the review context: diff, snippet, nearby files, or repository access.
+2. Gather only the evidence needed to make safe simplification claims.
+3. Find candidate complexity surfaces: abstraction, API, configuration, dependency, state, control flow, duplication, or test support.
+4. Reject candidates that protect behavior, safety, contracts, operability, or maintainability.
+5. For each remaining candidate, choose one action: delete, inline, replace, consolidate, or shrink.
+6. Assign risk based on evidence strength and compatibility impact.
+7. Stop when safe findings are available or no safe simplifications can be proven.
 
-Prefer the smallest change that removes the unjustified surface.
-
-Do not remove actual test coverage merely to reduce code.
-
-## Complexity surfaces
+## Complexity Surfaces
 
 Classify each finding by the maintenance surface it removes; use these labels as review lenses, not as an exhaustive checklist:
 
@@ -50,7 +44,7 @@ Classify each finding by the maintenance surface it removes; use these labels as
 - `duplication`: repeated or hand-written logic that can be replaced by existing project patterns, standard-library features, or clearer direct code
 - `test-support`: test helpers, fixtures, mocks, or test-only abstractions that add indirection without improving behavior verification
 
-## Protected complexity
+## Protected Complexity
 
 Do not simplify away complexity that protects:
 
@@ -62,7 +56,7 @@ Do not simplify away complexity that protects:
 
 Treat exported APIs, compatibility layers, adapters, harness integrations, and documented extension points as protected unless the available evidence proves they are unused and unsupported.
 
-## Evidence rules
+## Evidence Rules
 
 Match the strength of each claim to the available context.
 
@@ -73,9 +67,9 @@ Match the strength of each claim to the available context.
 
 When a simplification depends on an assumption, state the assumption in `Safe because:` and mark the risk as `medium`.
 
-If an idea is plausible but not safely actionable, omit it or list it under `Possible follow-ups`.
+If an idea is plausible but not safely actionable, omit it or list it under `Possible Follow-ups`.
 
-## Finding actions
+## Finding Actions
 
 Each finding tag pairs one complexity surface with one action: `[<surface>/<action>]`.
 
@@ -87,75 +81,64 @@ Use one action per finding:
 - `consolidate`: merge duplicated logic into an existing pattern without creating a speculative abstraction
 - `shrink`: express the same behavior more directly without changing the surrounding structure
 
-## Risk levels
+## Risk Levels
 
 Use one risk level per finding:
 
 - `low`: behavior preservation is clear, local, and has no public API or compatibility impact
 - `medium`: likely safe, but depends on caller behavior, compatibility assumptions, or test coverage
 
-Do not report high-risk ideas as findings. Put them under `Possible follow-ups`.
+Do not report high-risk ideas as findings. Put them under `Possible Follow-ups`.
 
-## Response format
+## Output Shape
 
 Start with a one-sentence verdict.
 
-Then use these sections in order, omitting empty sections except `Final`:
+```text
+Verdict: <one-sentence simplification assessment>
 
-1. `Findings`
-2. `Kept complexity`
-3. `Possible follow-ups`
-4. `Final`
+Findings:
+- <location> [<surface>/<action>] <simplification>. Replace with: <replacement-or-none>. Safe because: <evidence>. Risk: <low|medium>.
 
-### Findings
+Kept Complexity:
+- <location> Keep this complexity. Reason: <current justification>.
 
-Use one bullet per finding:
+Possible Follow-ups:
+- <location> [<surface>/<action>] <possible simplification>. Risk: high. Needs: <missing evidence>.
 
-`- <location> [<surface>/<action>] <what to simplify>. Replace with: <replacement-or-none>. Safe because: <evidence>. Risk: <low|medium>.`
+Final:
+<maintenance-surface summary or no-safe-simplifications conclusion>
+```
 
-Where:
+Omit empty sections except `Verdict` and `Final`.
 
-- `<location>` is a repository-relative path with line numbers when available
-- for pasted snippets or partial diffs, identify the snippet or diff hunk instead of inventing file paths or line numbers
-- `<surface>` is one of the labels from `Complexity surfaces`
-- `<action>` is one of the labels from `Finding actions`
-- `<evidence>` cites only what the available context can support
+## Decision Rules
+
+Prefer local simplifications that preserve the current behavior and contract.
+
+Do not recommend redesigns, broad rewrites, module moves, public API changes, compatibility changes, or harness-boundary changes unless the user explicitly asks for that scope.
+
+A simplification is reportable only when it is:
+
+- behavior-preserving
+- concrete and local enough to review
+- supported by the available code, diff, snippet, tests, configuration, documentation, or package usage
+- scoped to what the available context can prove
+- not weakening protected complexity
+
+Prefer the smallest change that removes the unjustified surface.
+
+Do not remove actual test coverage merely to reduce code.
 
 A finding is invalid without a concrete location, surface, action, change, replacement, safety reason, and risk level.
 
-### Kept complexity
-
-Use only when a tempting simplification was considered but rejected, and explaining why helps prevent unsafe churn.
-
-Format:
-
-`- <location> Keep this complexity. Reason: <current justification>.`
+Use `Kept Complexity` only when a tempting simplification was considered but rejected, and explaining why helps prevent unsafe churn.
 
 Use this especially for public APIs, compatibility layers, validation, security, tests, adapter boundaries, and harness boundaries.
 
-### Possible follow-ups
+For pasted snippets or partial diffs, identify the snippet or diff hunk instead of inventing repository paths or line numbers.
 
-Use sparingly for high-risk ideas with a concrete investigation target and clearly missing evidence.
-
-Format:
-
-`- <location> [<surface>/<action>] <possible simplification>. Risk: high. Needs: <missing evidence>.`
-
-### Final
-
-End with one of:
-
-`<maintenance-surface summary>.`
-
-or:
-
-`No safe simplifications found. Remaining complexity appears justified by the available evidence.`
-
-or:
-
-`No safe simplifications found in the provided context. More context is needed before making stronger claims.`
-
-## Stop rules
+## Stop Conditions
 
 Use the minimum context needed to make evidence-backed simplification claims.
 
@@ -163,18 +146,4 @@ Stop once the review can produce concrete, safe findings or conclude that no saf
 
 Do not continue searching only to increase the number of findings.
 
-If the available context cannot prove that a simplification is safe, omit it or put it under `Possible follow-ups`.
-
-## Examples
-
-Good finding:
-
-`- src/date.ts:L4-L12 [dependency/replace] Remove the date-fns import used only for one localized date label. Replace with: Intl.DateTimeFormat. Safe because: the existing options map directly to Intl.DateTimeFormat for the supported locales. Risk: low.`
-
-Good kept complexity:
-
-`- src/client.ts:L31-L58 Keep this complexity. Reason: this wrapper is exported as part of the documented adapter boundary and is used by the test harness.`
-
-Good possible follow-up:
-
-`- src/plugins.ts:L10-L84 [abstraction/delete] The plugin layer may be removable. Risk: high. Needs: confirmation that the exported plugin API is not supported externally and no downstream packages depend on it.`
+If the available context cannot prove that a simplification is safe, omit it or put it under `Possible Follow-ups`.
