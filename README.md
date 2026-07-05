@@ -78,6 +78,7 @@ Mergeability-first Engineering is the default guidance bundled with Velkross. It
 
 | Skill                 | Use it for                                                                                            |
 | --------------------- | ----------------------------------------------------------------------------------------------------- |
+| `agent-skill-design`  | Design, review, and refine reusable Agent Skills with clear triggers and evaluation checks.           |
 | `agent-memory`        | Save, recall, and organize repo-local project context across conversations.                           |
 | `clarify-or-proceed`  | Decide whether to clarify, assume, investigate, compare options, or proceed when a task is ambiguous. |
 | `complexity-review`   | Review code, diffs, or snippets for unjustified complexity and safe simplifications.                  |
