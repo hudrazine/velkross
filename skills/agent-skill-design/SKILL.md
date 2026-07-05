@@ -1,6 +1,6 @@
 ---
 name: agent-skill-design
-description: Use when designing, reviewing, or refining Agent Skills, converting workflows or guidance into Skills, deciding whether content belongs in a Skill/tool/docs/policy/memory, or tightening vague, broad, unsafe, or hard-to-invoke Skills so they become reusable, selectable, safe, evaluable, and behavior-changing.
+description: Use when designing, reviewing, or refining Agent Skills, converting workflows or guidance into Skills, deciding whether content belongs in a Skill/tool/docs/policy/memory, or tightening vague, broad, unsafe, or hard-to-invoke Skills so they become reusable, selectable, safe, evaluable, and behavior-changing. Do not use as a substitute for platform-specific packaging, manifest, or authoring-spec rules.
 ---
 
 # Agent Skill Design

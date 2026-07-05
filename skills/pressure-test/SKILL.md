@@ -1,6 +1,6 @@
 ---
 name: pressure-test
-description: Pressure-test a plan, design, decision, or implementation approach through a focused one-question-at-a-time interview. Use when the user asks to be grilled, wants to pressure-test a proposal, align expectations, resolve ambiguous tradeoffs, validate assumptions, or reach shared understanding before implementation.
+description: Pressure-test a plan, design, decision, or implementation approach through a focused one-question-at-a-time interview. Use when the user asks to be grilled, wants to validate assumptions, resolve ambiguous tradeoffs, align expectations, or reach shared understanding before implementation. Do not use when the user is asking to implement immediately, when repo context can answer the uncertainty directly, or when deterministic validation or tests are the better next step.
 ---
 
 # Pressure Test

@@ -1,6 +1,6 @@
 ---
 name: agent-memory
-description: "Use this skill to read, write, update, search, or organize repo-local Markdown memory notes so project-specific context can be resumed across conversations. Use when the user asks to remember, save, recall, or clean up notes, and also proactively when durable project knowledge, restart points, decisions, gotchas, solved problems, or in-progress context should be preserved or checked before related work."
+description: "Use this skill to read, write, update, search, or organize repo-local Markdown memory notes so project-specific context can be resumed across conversations. Use when the user asks to remember, save, recall, or clean up notes, or when durable project knowledge, restart points, decisions, gotchas, solved problems, or in-progress context should be preserved or checked before related work. Do not use for transient task details, facts that belong in repository docs, or information that is not useful across conversations."
 ---
 
 # Agent Memory
