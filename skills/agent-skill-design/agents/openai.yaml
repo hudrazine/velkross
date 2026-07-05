@@ -1,4 +1,4 @@
 interface:
   display_name: "Agent Skill Design"
   short_description: "Design and review reusable agent skills"
-  default_prompt: "Use $agent-skill-design to review this skill draft for trigger clarity, boundaries, operational guidance, and evaluation checks."
+  default_prompt: "Review this skill draft for trigger clarity, boundaries, operational guidance, and evaluation checks with"

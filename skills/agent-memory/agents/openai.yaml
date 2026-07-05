@@ -1,4 +1,4 @@
 interface:
   display_name: "Agent Memory"
   short_description: "Save, recall, and organize repo-local project context"
-  default_prompt: "Use $agent-memory to check relevant repository memories before work and save durable context afterward."
+  default_prompt: "Check relevant repository memories before work and save durable context afterward with"
