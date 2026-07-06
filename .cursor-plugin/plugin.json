@@ -1,0 +1,13 @@
+{
+  "name": "velkross",
+  "version": "0.0.4",
+  "description": "Mergeability-first engineering guidance and skills for Cursor.",
+  "author": {
+    "name": "Hudrazine"
+  },
+  "homepage": "https://github.com/hudrazine/velkross",
+  "repository": "https://github.com/hudrazine/velkross",
+  "license": "MIT",
+  "skills": "./skills/",
+  "rules": "./rules/"
+}
