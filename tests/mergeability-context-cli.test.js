@@ -8,8 +8,8 @@ const command = process.execPath;
 const scriptPath = fileURLToPath(new URL("../hooks/mergeability-context.js", import.meta.url));
 const instructionPath = new URL("../hooks/mergeability-first-engineering.md", import.meta.url);
 
-function runHook(input) {
-  return spawnSync(command, [scriptPath], {
+function runHook(input, args = []) {
+  return spawnSync(command, [scriptPath, ...args], {
     encoding: "utf8",
     input,
   });
@@ -39,4 +39,19 @@ test("reports unsupported hook events", () => {
   expect(result.stderr).toContain(
     "Failed to load mergeability instructions: Unsupported hook event: Stop",
   );
+});
+
+test("emits Claude Code hook output when requested", () => {
+  const result = runHook('{"hook_event_name":"SubagentStart"}', ["--harness", "claude-code"]);
+  const expectedContext = readFileSync(instructionPath, "utf8").trim();
+
+  expect(result.status).toBe(0);
+  expect(result.stderr).toBe("");
+  expect(result.stdout.endsWith("\n")).toBe(true);
+  expect(JSON.parse(result.stdout)).toEqual({
+    hookSpecificOutput: {
+      hookEventName: "SubagentStart",
+      additionalContext: expectedContext,
+    },
+  });
 });

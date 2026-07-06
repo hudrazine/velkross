@@ -1,6 +1,10 @@
 import { expect, test } from "vite-plus/test";
 
-import { createHookOutput, resolveHookEventName } from "../hooks/hook-runtime.js";
+import {
+  createClaudeCodeHookOutput,
+  createCodexHookOutput,
+  resolveHookEventName,
+} from "../hooks/hook-runtime.js";
 
 test("uses SessionStart when hook input is empty", () => {
   expect(resolveHookEventName("")).toBe("SessionStart");
@@ -27,12 +31,26 @@ test("throws for invalid JSON hook input", () => {
 
 test("creates Codex hook output with mergeability context", () => {
   expect(
-    createHookOutput({
+    createCodexHookOutput({
       hookEventName: "SubagentStart",
       additionalContext: "Mergeability-first Engineering",
     }),
   ).toEqual({
     continue: true,
+    hookSpecificOutput: {
+      hookEventName: "SubagentStart",
+      additionalContext: "Mergeability-first Engineering",
+    },
+  });
+});
+
+test("creates Claude Code hook output with mergeability context", () => {
+  expect(
+    createClaudeCodeHookOutput({
+      hookEventName: "SubagentStart",
+      additionalContext: "Mergeability-first Engineering",
+    }),
+  ).toEqual({
     hookSpecificOutput: {
       hookEventName: "SubagentStart",
       additionalContext: "Mergeability-first Engineering",

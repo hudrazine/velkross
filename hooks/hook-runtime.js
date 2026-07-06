@@ -16,9 +16,18 @@ export function resolveHookEventName(inputText) {
   return hookEventName;
 }
 
-export function createHookOutput({ hookEventName, additionalContext }) {
+export function createCodexHookOutput({ hookEventName, additionalContext }) {
   return {
     continue: true,
+    hookSpecificOutput: {
+      hookEventName,
+      additionalContext,
+    },
+  };
+}
+
+export function createClaudeCodeHookOutput({ hookEventName, additionalContext }) {
+  return {
     hookSpecificOutput: {
       hookEventName,
       additionalContext,

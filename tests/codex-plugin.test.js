@@ -1,0 +1,33 @@
+import { readFileSync } from "node:fs";
+
+import { expect, test } from "vite-plus/test";
+
+function readJson(path) {
+  return JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
+}
+
+const codexHookCommand = {
+  type: "command",
+  command: "node ${PLUGIN_ROOT}/hooks/mergeability-context.js --harness codex",
+  commandWindows:
+    "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js') --harness codex\"",
+  statusMessage: "Loading mergeability context",
+};
+
+test("declares Codex hooks with an explicit harness", () => {
+  expect(readJson("../hooks/codex-hooks.json")).toEqual({
+    hooks: {
+      SessionStart: [
+        {
+          matcher: "startup|resume|clear|compact",
+          hooks: [codexHookCommand],
+        },
+      ],
+      SubagentStart: [
+        {
+          hooks: [codexHookCommand],
+        },
+      ],
+    },
+  });
+});

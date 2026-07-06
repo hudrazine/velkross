@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${PLUGIN_ROOT}/hooks/mergeability-context.js",
-            "commandWindows": "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js')\"",
+            "command": "node ${PLUGIN_ROOT}/hooks/mergeability-context.js --harness codex",
+            "commandWindows": "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js') --harness codex\"",
             "statusMessage": "Loading mergeability context"
           }
         ]
@@ -18,8 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${PLUGIN_ROOT}/hooks/mergeability-context.js",
-            "commandWindows": "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js')\"",
+            "command": "node ${PLUGIN_ROOT}/hooks/mergeability-context.js --harness codex",
+            "commandWindows": "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js') --harness codex\"",
             "statusMessage": "Loading mergeability context"
           }
         ]
