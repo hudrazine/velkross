@@ -1,6 +1,7 @@
 {
   "type": "module",
   "scripts": {
+    "test": "vp test",
     "prepare": "vp config"
   },
   "devDependencies": {
