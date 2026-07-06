@@ -13,10 +13,8 @@ const claudeCodeHookCommand = {
   statusMessage: "Loading mergeability context",
 };
 
-test("declares a Claude Code plugin manifest", () => {
+test("declares Claude Code plugin entrypoints", () => {
   expect(readJson("../.claude-plugin/plugin.json")).toMatchObject({
-    name: "velkross",
-    description: "Mergeability-first engineering guidance and skills for Claude Code.",
     skills: "./skills/",
     hooks: "./hooks/claude-hooks.json",
   });

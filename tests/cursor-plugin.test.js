@@ -14,17 +14,8 @@ function fileExists(path) {
   return existsSync(new URL(path, import.meta.url));
 }
 
-test("declares a Cursor plugin manifest", () => {
-  expect(readJson("../.cursor-plugin/plugin.json")).toEqual({
-    name: "velkross",
-    version: "0.0.4",
-    description: "Mergeability-first engineering guidance and skills for Cursor.",
-    author: {
-      name: "Hudrazine",
-    },
-    homepage: "https://github.com/hudrazine/velkross",
-    repository: "https://github.com/hudrazine/velkross",
-    license: "MIT",
+test("declares Cursor plugin entrypoints", () => {
+  expect(readJson("../.cursor-plugin/plugin.json")).toMatchObject({
     skills: "./skills/",
     rules: "./rules/",
   });

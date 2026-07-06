@@ -14,6 +14,13 @@ const codexHookCommand = {
   statusMessage: "Loading mergeability context",
 };
 
+test("declares Codex plugin entrypoints", () => {
+  expect(readJson("../.codex-plugin/plugin.json")).toMatchObject({
+    skills: "./skills/",
+    hooks: "./hooks/codex-hooks.json",
+  });
+});
+
 test("declares Codex hooks with an explicit harness", () => {
   expect(readJson("../hooks/codex-hooks.json")).toEqual({
     hooks: {
