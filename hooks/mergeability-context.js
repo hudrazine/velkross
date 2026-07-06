@@ -1,17 +1,45 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const hookDir = dirname(fileURLToPath(import.meta.url));
 const instructionPath = join(hookDir, "mergeability-first-engineering.md");
 const supportedEvents = new Set(["SessionStart", "SubagentStart"]);
+const maxStdinBytes = 64 * 1024;
+const stdinChunkBytes = 8 * 1024;
+
+class StdinSizeLimitError extends Error {}
 
 function readStdin() {
+  const chunks = [];
+  const buffer = Buffer.alloc(stdinChunkBytes);
+  let totalBytes = 0;
+
   try {
-    return readFileSync(0, "utf8");
-  } catch {
+    while (true) {
+      const bytesRead = readSync(0, buffer, 0, buffer.length, null);
+
+      if (bytesRead === 0) {
+        break;
+      }
+
+      totalBytes += bytesRead;
+
+      if (totalBytes > maxStdinBytes) {
+        throw new StdinSizeLimitError(`Hook input exceeds ${maxStdinBytes} bytes`);
+      }
+
+      chunks.push(Buffer.from(buffer.subarray(0, bytesRead)));
+    }
+  } catch (error) {
+    if (error instanceof StdinSizeLimitError) {
+      throw error;
+    }
+
     return "";
   }
+
+  return Buffer.concat(chunks, totalBytes).toString("utf8");
 }
 
 function resolveHookEventName() {
