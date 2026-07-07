@@ -31,36 +31,116 @@ Velkross ships harness-specific adapters so the same engineering guidance can be
 
 ## Installation
 
-Install the adapter that matches your agent harness, then restart or reload the harness so Velkross can be discovered.
+Install Velkross as a plugin for your agent harness, then start a new session or reload plugins so the bundled guidance, hooks, rules, and skills are discovered.
 
 ### Codex
 
-Use the Velkross Codex adapter from your Codex plugin configuration. After the plugin is installed and enabled, start a new thread so the bundled hooks and skills are available.
+Add the Velkross marketplace, then install Velkross from the Codex plugin browser.
+
+```bash
+codex plugin marketplace add hudrazine/velkross
+codex
+```
+
+In Codex CLI, open `/plugins`, select Velkross, and install it. In the Codex app, open **Plugins**, select Velkross from the added marketplace, and install it. Start a new thread after installation so the bundled hooks and skills are available.
 
 ### Claude Code
 
-Use the Velkross Claude Code adapter from your Claude Code extension or plugin configuration. After the adapter is installed and enabled, restart or reload Claude Code so the bundled guidance can be applied.
+Add the Velkross marketplace, install the plugin, then reload plugins in the active Claude Code session.
+
+```bash
+claude plugin marketplace add hudrazine/velkross
+claude plugin install velkross@velkross
+```
+
+Inside Claude Code:
+
+```text
+/reload-plugins
+```
 
 ### Cursor
 
-Use the Velkross Cursor adapter from your Cursor extension or plugin configuration. After the adapter is installed and enabled, restart or reload Cursor so the bundled guidance can be applied.
+Install Velkross as a local Cursor plugin by cloning this repository into Cursor's local plugin directory.
+
+macOS/Linux:
+
+```bash
+mkdir -p ~/.cursor/plugins/local
+git clone https://github.com/hudrazine/velkross.git ~/.cursor/plugins/local/velkross
+```
+
+Windows PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.cursor\plugins\local"
+git clone https://github.com/hudrazine/velkross.git "$env:USERPROFILE\.cursor\plugins\local\velkross"
+```
+
+Restart Cursor or run **Developer: Reload Window** so the bundled rules and skills are loaded.
+
+To update a local Cursor installation:
+
+```bash
+git -C ~/.cursor/plugins/local/velkross pull
+```
 
 <details>
 <summary>Uninstallation</summary>
 
-Remove the Velkross plugin or adapter from your agent harness configuration, then restart or reload the harness.
+Remove the Velkross plugin from your agent harness, then restart or reload the harness.
 
 ### Codex
 
-Disable or remove the Velkross Codex plugin from your Codex plugin configuration, then start a new thread.
+In Codex CLI, open the plugin browser:
+
+```bash
+codex
+```
+
+Then run:
+
+```text
+/plugins
+```
+
+Open Velkross from the Velkross marketplace and select `Uninstall plugin`. In the Codex app, open **Plugins**, select Velkross, and uninstall it. Start a new thread after uninstalling.
+
+To remove the Velkross marketplace from Codex CLI as well:
+
+```bash
+codex plugin marketplace remove velkross
+```
 
 ### Claude Code
 
-Disable or remove the Velkross Claude Code adapter from your Claude Code configuration, then restart or reload Claude Code.
+Uninstall Velkross, then reload plugins.
+
+```bash
+claude plugin uninstall velkross@velkross
+```
+
+Inside Claude Code:
+
+```text
+/reload-plugins
+```
 
 ### Cursor
 
-Disable or remove the Velkross Cursor adapter from your Cursor configuration, then restart or reload Cursor.
+Remove the local plugin checkout, then restart Cursor or run **Developer: Reload Window**.
+
+macOS/Linux:
+
+```bash
+rm -rf ~/.cursor/plugins/local/velkross
+```
+
+Windows PowerShell:
+
+```powershell
+Remove-Item -Recurse -Force "$env:USERPROFILE\.cursor\plugins\local\velkross"
+```
 
 </details>
 

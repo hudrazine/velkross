@@ -1,7 +1,7 @@
 {
   "name": "velkross",
   "version": "0.0.4",
-  "description": "Velkross plugin",
+  "description": "Mergeability-first engineering guidance and reusable skills for Codex.",
   "author": {
     "name": "Hudrazine",
     "url": "https://github.com/hudrazine"
@@ -9,16 +9,20 @@
   "homepage": "https://github.com/hudrazine/velkross",
   "repository": "https://github.com/hudrazine/velkross",
   "license": "MIT",
-  "keywords": [],
+  "keywords": ["mergeability", "engineering", "skills", "hooks", "coding-agents"],
   "skills": "./skills/",
   "hooks": "./hooks/codex-hooks.json",
   "interface": {
     "displayName": "Velkross",
-    "shortDescription": "Use Velkross in Codex.",
-    "longDescription": "Velkross adds repository-local Codex plugin hooks and skills.",
+    "shortDescription": "Keep Codex changes scoped, reviewable, and merge-ready.",
+    "longDescription": "Velkross adds Mergeability-first Engineering guidance, lifecycle hooks, and reusable skills that help Codex keep code changes scoped, durable, typed, tested, and ready to review.",
     "developerName": "Hudrazine",
     "category": "Productivity",
-    "capabilities": [],
-    "defaultPrompt": "Help me use Velkross."
+    "capabilities": ["Hooks", "Skills"],
+    "defaultPrompt": [
+      "Use Velkross while implementing this change.",
+      "Review this diff with Velkross mergeability guidance.",
+      "Help me choose the smallest durable next step."
+    ]
   }
 }

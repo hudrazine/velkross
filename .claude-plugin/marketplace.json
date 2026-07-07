@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "velkross",
+  "description": "Mergeability-first engineering guidance and skills for Claude Code.",
+  "owner": {
+    "name": "Hudrazine"
+  },
+  "plugins": [
+    {
+      "name": "velkross",
+      "displayName": "Velkross",
+      "source": "./",
+      "description": "Mergeability-first engineering guidance and skills for Claude Code.",
+      "author": {
+        "name": "Hudrazine"
+      },
+      "homepage": "https://github.com/hudrazine/velkross",
+      "repository": "https://github.com/hudrazine/velkross",
+      "license": "MIT",
+      "category": "productivity"
+    }
+  ]
+}

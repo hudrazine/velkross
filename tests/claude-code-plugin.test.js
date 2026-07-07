@@ -20,6 +20,22 @@ test("declares Claude Code plugin entrypoints", () => {
   });
 });
 
+test("declares Claude Code marketplace entrypoint", () => {
+  expect(readJson("../.claude-plugin/marketplace.json")).toMatchObject({
+    name: "velkross",
+    owner: {
+      name: "Hudrazine",
+    },
+    plugins: [
+      {
+        name: "velkross",
+        source: "./",
+        category: "productivity",
+      },
+    ],
+  });
+});
+
 test("declares Claude Code hooks for mergeability context", () => {
   expect(readJson("../hooks/claude-hooks.json")).toEqual({
     hooks: {
