@@ -7,19 +7,21 @@ alwaysApply: true
 
 Deliver code that is ready to review and merge, not merely code that appears to work.
 
+These are standing engineering principles, not a step-by-step workflow. Apply them whenever making implementation decisions.
+
 Use these rules as the shared engineering center of gravity for implementation decisions. Optimize for correctness, maintainability, explicit contracts, architectural fit, and practical verifiability.
 
 ## Core standard
 
 - Prefer the smallest durable change, not the smallest diff. A durable change preserves or improves correctness, maintainability, type safety, behavioral contracts, and architectural boundaries.
 - Small is good only when the change is made in the right layer and preserves the existing contract. A tiny patch in the wrong place is future rework.
-- When principles conflict, preserve correctness, explicit contracts, type safety, and architectural boundaries before optimizing for convenience, diff size, or local cleanup.
+- When principles conflict, preserve correctness, explicit contracts, type safety, architectural boundaries, and practical verifiability before optimizing for convenience, diff size, or local cleanup.
 - Leave code easy for a human reviewer to understand. Express intent through names, types, structure, and focused tests. Add short nearby comments only for non-obvious constraints, invariants, or tradeoffs.
 
 ## Change scope and durability
 
 - Stay within the requested scope. Fix or improve code directly touched by the task when it materially improves correctness, maintainability, or clarity.
-- Avoid broad rewrites, unrelated cleanup, dependency changes, public API changes, compatibility layers, formatting-only churn, or large structural moves unless they are required by the task.
+- Treat broad rewrites, unrelated cleanup, dependency changes, public API changes, compatibility layers, formatting-only churn, and large structural moves as high-cost choices, not forbidden moves. Use them only when required for correctness, architectural fit, or the requested behavior.
 - Prefer deletion over addition, boring over clever, and fewer moving parts over more.
 - Keep changes local when that fits the existing architecture. Do not place logic in the wrong layer merely to reduce file count or diff size.
 - Prefer the smallest obvious implementation. Do not compress code into clever one-liners when named intermediate steps are easier to read, type-check, test, or debug.
@@ -27,14 +29,14 @@ Use these rules as the shared engineering center of gravity for implementation d
 ## Existing design and reuse
 
 - Existing implementation patterns are part of the design. Match the local approach for the same kind of behavior, including domain models, utilities, naming, state management, error conventions, and test style.
-- Do not introduce a new pattern merely because it seems cleaner in isolation. Introduce a new pattern only when the existing one is clearly insufficient for the requested change, and make the reason visible through naming, structure, tests, or a short nearby comment.
-- Before adding new implementation, confirm that the behavior is required by the requested scope and is not already covered by an existing project model, helper, utility, pattern, convention, standard/runtime/platform capability, already-adopted framework feature, or approved dependency. Add only the minimum durable implementation that remains after those checks.
+- Do not introduce a new pattern merely because it seems cleaner in isolation. Introduce a new pattern only when the existing one is clearly insufficient or actively harmful for the requested change, and make the reason visible through naming, structure, tests, or a short nearby comment.
+- Before adding new implementation, confirm that the behavior is required by the requested scope and is not already covered by directly relevant existing patterns, project models, helpers, utilities, conventions, standard/runtime/platform capabilities, already-adopted framework features, or approved dependencies. Add only the minimum durable implementation that remains after those checks.
 - Avoid duplicating existing domain logic, validation rules, error mapping, serialization, state transitions, or formatting conventions unless the existing abstraction is clearly the wrong fit.
 
 ## Boundaries, contracts, types, and state
 
 - Do not weaken contracts or type safety to make implementation easier. Avoid unsafe escape hatches, unchecked assumptions, overly broad types, silent coercion, and assertions that merely suppress uncertainty.
-- Make invalid states hard to represent. Prefer explicit domain types, narrow interfaces, validated inputs at boundaries, and state models with clear allowed transitions.
+- When modeling inputs, outputs, or state-related behavior, make invalid states hard to represent. Prefer explicit domain types, narrow interfaces, validated inputs at boundaries, and state models with clear allowed transitions.
 - Avoid boolean flag combinations that create unclear or impossible states. Prefer named states, structured variants, or explicit lifecycle models when behavior depends on state.
 - Keep domain logic, I/O, persistence, state management, and presentation concerns separated. Isolate side effects at clear boundaries.
 - Do not pass infrastructure details through layers that should remain domain-focused.
@@ -54,7 +56,7 @@ Use these rules as the shared engineering center of gravity for implementation d
 - Prefer simple implementations when they preserve the behavioral contract and architectural boundaries.
 - Avoid speculative abstraction. Add an abstraction only when it removes real duplication, clarifies a domain concept, isolates a real boundary, or makes a known required change safer.
 - Do not add configuration surfaces, adapters, compatibility layers, generic frameworks, or extension points for hypothetical future needs.
-- Intentional simplifications that limit behavior, scalability, or compatibility must have a clear ceiling. Name the constraint, why it is acceptable now, and the upgrade path if the constraint stops holding.
+- When an intentional simplification creates a non-obvious ceiling for behavior, scalability, or compatibility, name the constraint, why it is acceptable now, and the upgrade path if the constraint stops holding.
 - Simplicity must not come from ignoring edge cases, weakening validation, collapsing distinct states, or moving responsibility into the wrong layer.
 
 ## Verification and reviewability
