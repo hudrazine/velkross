@@ -1,33 +1,102 @@
 # Velkross
 
-Mergeability-first engineering for AI coding agents.
+Language-agnostic mergeability-first engineering for AI coding agents.
 
-Velkross is a plugin for agent harnesses such as Codex, Claude Code, and Cursor. It gives AI coding agents a consistent engineering bias toward changes that are scoped, reviewable, and ready to merge.
+Velkross is a plugin for AI coding agent harnesses such as Codex, Claude Code, and Cursor. It gives agents a stable engineering stance centered on mergeability: changes should be scoped, understandable, aligned with the existing codebase, and practically verifiable.
 
-The core idea is **Mergeability-first Engineering**. Modern AI coding agents can write useful code, but their implementation judgment can still drift toward changes that are too broad, too clever, under-tested, weakly typed, or misaligned with the existing codebase. Velkross helps keep that judgment steady.
+The goal is not to replace project conventions, language expertise, or the agent's general coding ability. Velkross adds a review-oriented bias on top of them so the agent keeps asking the engineering question that matters during collaboration: is this change ready to review and merge?
 
-## What Velkross does
+## What Velkross is
 
-Velkross helps AI coding agents:
+Velkross packages three layers of reusable agent guidance:
 
-- Keep changes scoped, durable, and easy to review.
-- Prefer existing project patterns before introducing new abstractions.
-- Protect type safety, domain boundaries, and error semantics.
-- Treat bug reports as symptoms and fix shared root causes.
-- Add practical verification for meaningful behavior changes.
-- Use reusable engineering workflows instead of one-off prompt fragments.
+- **A baseline engineering stance** through Mergeability-first Engineering.
+- **On-demand workflows** through bundled skills for planning, implementation, review, documentation, memory, and issue drafting.
+- **Harness adapters** that deliver the same core behavior through Codex, Claude Code, Cursor, and similar agent environments.
+
+## Why mergeability
+
+Modern AI coding agents are flexible enough to work across many languages, frameworks, and project styles. That flexibility is useful, but it can also make implementation judgment drift toward changes that are too broad, too clever, weakly verified, or misaligned with the surrounding codebase.
+
+Mergeability-first Engineering keeps the agent oriented around the review boundary. A useful change should not merely appear to work. It should preserve the relevant contracts, fit the local architecture, respect error and data semantics, remain understandable to a maintainer, and leave behind proportionate verification when behavior changes.
+
+This is not a replacement for generic software principles. Velkross assumes modern agents already know many common programming patterns. Its job is to keep the agent's choices grounded in the practical standard a human reviewer eventually applies: can this be safely reviewed, maintained, and merged?
+
+## How it works
+
+### Baseline guidance
+
+Mergeability-first Engineering is the always-on guidance bundled with Velkross. It gives agents a steady implementation bias toward changes that preserve maintainability, correctness, type safety where applicable, architectural boundaries, explicit contracts, and practical testability.
+
+### Workflow skills
+
+Skills make the baseline actionable in specific situations. Use them when the agent needs a focused workflow for clarifying scope, pressure-testing a plan, designing a boundary, reducing complexity, practicing TDD, preserving project context, maintaining docs, or turning ideas into implementation issues.
+
+### Harness adapters
+
+Velkross ships harness-specific adapters so the same engineering guidance can be used across agent environments. Each adapter fits the configuration and lifecycle model of its host harness while preserving the same core engineering behavior.
+
+## Usage
+
+Once installed, Velkross should apply its mergeability guidance through the host harness lifecycle. In normal coding sessions, you can ask your agent to implement, review, debug, or refactor as usual; Velkross adds the shared engineering judgment in the background.
+
+When your harness supports direct skill or plugin invocation, you can also call a bundled workflow explicitly:
+
+```text
+Use Velkross while implementing this change.
+Use clarify-or-proceed to help choose the next step.
+Pressure-test this plan before implementation.
+Review this diff for unnecessary complexity.
+Use TDD for this behavior change.
+```
+
+## Skills
+
+Velkross skills are on-demand workflows that make Mergeability-first Engineering actionable in specific moments of software development.
+
+### Decide and align
+
+Use these when the task is still ambiguous, risky, or shaped by unresolved tradeoffs.
+
+- `clarify-or-proceed`: Decide whether to ask, assume, investigate, compare options, or proceed.
+- `pressure-test`: Test key assumptions, tradeoffs, and AI-user alignment before implementation.
+
+### Build and verify
+
+Use this when behavior needs to be changed with practical verification.
+
+- `tdd`: Drive behavior changes with a practical List -> Red -> Green -> Refactor loop.
+
+### Design and review
+
+Use these when the shape of the code matters as much as the immediate behavior.
+
+- `design-deep-modules`: Design, reshape, or review module boundaries using the Deep Modules lens.
+- `complexity-review`: Review code, diffs, or snippets for unjustified complexity and safe simplifications.
+
+### Preserve project knowledge
+
+Use these when context should survive beyond the current conversation or stay trustworthy in repository docs.
+
+- `agent-memory`: Save, recall, and organize repo-local project context across conversations.
+- `manage-project-docs`: Maintain repository docs, including docs/README.md as the project-doc router.
+
+### Turn work into artifacts
+
+Use these when ideas, plans, or reusable practices need to become implementation-ready artifacts.
+
+- `to-issues`: Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.
+- `agent-skill-design`: Design, review, and refine reusable Agent Skills with clear triggers and evaluation checks.
 
 ## Supported agent harnesses
 
-Velkross is designed for agent harnesses that can load bundled instructions, hooks, skills, or similar extension packages.
+Velkross is designed for agent harnesses that can load bundled instructions, hooks, skills, rules, or similar extension packages.
 
 Supported harness targets:
 
 - Codex
 - Claude Code
 - Cursor
-
-Velkross ships harness-specific adapters so the same engineering guidance can be used across agent environments. Each adapter should preserve the same core behavior while fitting the configuration and lifecycle model of its host harness.
 
 ## Installation
 
@@ -43,6 +112,8 @@ codex
 ```
 
 In Codex CLI, open `/plugins`, select Velkross, and install it. In the Codex app, open **Plugins**, select Velkross from the added marketplace, and install it. Start a new thread after installation so the bundled hooks and skills are available.
+
+Velkross includes Codex hooks. If Codex warns that hooks need review, open the hooks review view in the Codex app or use `/hooks` in the CLI, inspect the Velkross hook definitions, and trust them to enable the hook behavior.
 
 ### Claude Code
 
@@ -144,43 +215,11 @@ Remove-Item -Recurse -Force "$env:USERPROFILE\.cursor\plugins\local\velkross"
 
 </details>
 
-## Usage
-
-Once installed, Velkross should apply its mergeability guidance through the host harness lifecycle. In normal coding sessions, you can ask your agent to implement, review, debug, or refactor as usual; Velkross adds the shared engineering judgment in the background.
-
-Bundled skills can also be invoked explicitly when your harness supports direct skill or plugin invocation. Use them when you want a specific Velkross workflow for memory, review, or other focused engineering tasks.
-
-## Core guidance
-
-Mergeability-first Engineering is the default guidance bundled with Velkross. It gives agents a steady implementation bias toward changes that preserve maintainability, correctness, type safety, architectural boundaries, and practical testability.
-
-## Skills
-
-| Skill                 | Use it for                                                                                            |
-| --------------------- | ----------------------------------------------------------------------------------------------------- |
-| `agent-skill-design`  | Design, review, and refine reusable Agent Skills with clear triggers and evaluation checks.           |
-| `agent-memory`        | Save, recall, and organize repo-local project context across conversations.                           |
-| `clarify-or-proceed`  | Decide whether to clarify, assume, investigate, compare options, or proceed when a task is ambiguous. |
-| `complexity-review`   | Review code, diffs, or snippets for unjustified complexity and safe simplifications.                  |
-| `design-deep-modules` | Design, reshape, or review module boundaries using the Deep Modules lens.                             |
-| `manage-project-docs` | Maintain repository docs, including docs/README.md as the project-doc router.                         |
-| `pressure-test`       | Test key assumptions, tradeoffs, and AI-user alignment before implementation.                         |
-| `tdd`                 | Drive behavior changes with a practical List → Red → Green → Refactor loop.                           |
-| `to-issues`           | Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.               |
-
 ## Why this exists
 
-Velkross is meant to make AI-assisted engineering easier to maintain over time. Instead of relying only on ad hoc prompts, it packages reusable instructions and skills into harness plugins that can be installed, shared, reviewed, and evolved like the rest of a development toolchain.
+Velkross is meant to make AI-assisted engineering easier to maintain over time. Instead of relying only on ad hoc prompts, it packages reusable guidance and workflows into harness plugins that can be installed, shared, reviewed, and evolved like the rest of a development toolchain.
 
 The goal is not to make agents more verbose or more rigid. The goal is to give them a consistent bias toward changes that a human maintainer would actually want to review and merge.
-
-## Design principles
-
-- Prefer the smallest durable change over the smallest possible diff.
-- Match local project conventions before adding new patterns.
-- Keep domain logic, I/O, state, and presentation boundaries clear.
-- Preserve explicit errors instead of hiding failures behind silent fallbacks.
-- Prefer focused verification that proves behavior over tests that only mirror implementation details.
 
 ## License
 
