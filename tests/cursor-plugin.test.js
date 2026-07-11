@@ -32,11 +32,12 @@ test("does not declare Cursor hooks", () => {
 
 test("declares an always-applied Cursor rule for mergeability guidance", () => {
   const rule = readText("../rules/mergeability-first-engineering.mdc");
+  const instruction = readText("../hooks/mergeability-first-engineering.md");
+  const ruleBody = rule.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n+/, "");
 
   expect(rule).toContain(
     'description: "Mergeability-first Engineering guidance for coding agents"',
   );
   expect(rule).toContain("alwaysApply: true");
-  expect(rule).toContain("# Mergeability-first Engineering");
-  expect(rule).toContain("Prefer the smallest durable change, not the smallest diff.");
+  expect(ruleBody.trim()).toBe(instruction.trim());
 });
