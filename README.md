@@ -71,7 +71,7 @@ Use this when behavior needs to be changed with practical verification.
 
 Use these when the shape of the code matters as much as the immediate behavior.
 
-- `design-deep-modules`: Design, reshape, or review module boundaries using the Deep Modules lens.
+- `design-deep-modules`: Design, review, reshape, or incrementally migrate module boundaries using the Deep Modules lens.
 - `complexity-review`: Review code, diffs, or snippets for unjustified complexity and safe simplifications.
 
 ### Preserve project knowledge

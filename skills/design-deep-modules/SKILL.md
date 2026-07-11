@@ -1,186 +1,162 @@
 ---
 name: design-deep-modules
-description: Design, reshape, or review module, service, package, API, slice, port, or adapter boundaries using the Deep Modules lens. Use when deciding what a boundary should hide, designing a stable public interface, reducing shallow/pass-through services, separating domain/application policy from infrastructure or framework details, evaluating dependency direction, or planning boundary-focused tests. Avoid for general code review, pure simplification with no boundary/API concern, tiny local bug fixes, visual-only work, or documentation-only tasks that do not define architecture or public contracts.
+description: Design, review, reshape, or incrementally migrate module, service, package, API, slice, port, or adapter boundaries using the Deep Modules lens. Use when deciding what callers should know, which design decisions a boundary should hide, whether a boundary should be preserved, deepened, merged, split, or delayed, how dependencies should point, or how to enforce and test a stable public contract. Avoid for deployment-topology decisions alone, general code review, pure simplification with no boundary concern, tiny local fixes, visual-only work, or documentation that does not define architecture or public contracts.
 ---
 
 # Design Deep Modules
 
-## Purpose
+## Objective
 
-Design, reshape, or evaluate software boundaries so a small stable interface hides meaningful functionality, policy, coordination, validation, dependency handling, and change-prone design decisions.
+Design or reshape a cohesive boundary so callers rely on a small, stable contract while the module owns meaningful functionality, policy, coordination, validation, dependency handling, and change-prone decisions.
 
-Treat review as a path back into design: identify where a boundary is shallow, leaky, or misplaced, then recommend the smallest durable boundary change.
+Treat review as input to a boundary decision, not as a search for more abstractions. Recommend the smallest durable change supported by evidence.
 
-## Core Standard
+## Depth Standard
 
 Optimize for depth, not size.
 
-A deep module exposes a small, coherent public surface while hiding substantial useful knowledge. A shallow module forces callers to learn nearly as much as the implementation knows.
+Judge the interface by the total knowledge required to use it correctly, including:
 
-Prefer a boundary when it hides a real decision:
+- operations, types, events, options, and configuration
+- preconditions, side effects, failure semantics, and consistency guarantees
+- ordering, lifecycle, ownership, cleanup, and compatibility expectations
+- internal concepts or call sequences callers must reconstruct
 
-- domain invariant, policy, or workflow
-- sequencing, transaction, retry, idempotency, cache, or event ordering rule
-- validation, authorization, consistency, or error semantics
-- external system, framework, ORM, storage, transport, or vendor detail
-- algorithm, performance strategy, normalization, parsing, or state transition
-- change axis that should evolve without forcing unrelated callers to change
+Judge the implementation by the useful, cohesive knowledge it hides. Count domain rules, workflows, algorithms, state transitions, integration differences, validation, authorization, retries, transactions, caching, observability, and recovery behavior as depth when they belong to the same abstraction.
 
-Do not create a boundary only because a file is large, a class can be split, an interface seems tidy, or a future variation is imaginable.
+Require both depth and cohesion. Do not treat a small interface as justification for a god module, or a large file as proof that a boundary should be split.
 
-## Entry Paths
+Do not confuse a deep module with a deployment topology. Apply the lens within a process, package, library, plugin, or service boundary without using it alone to justify distribution or independent deployment.
 
-Choose the path from the input state, then keep using the shared lenses and checks.
+Generalize only when current callers, repeated use, or a demonstrated change axis supports it. Prefer a focused boundary over a speculative universal interface.
 
-### Design Path
+## Task Modes
 
-Use this path for new modules, APIs, services, packages, slices, ports, adapters, or refactor plans.
+Choose the mode that matches the requested outcome, then use the shared workflow.
 
-1. Identify the caller task and the change axis.
-2. Name the knowledge the boundary should hide.
-3. Decide the public surface before the internal structure.
-4. Prefer operations named for user/domain intent, not implementation steps.
-5. Keep boundary-crossing data simple and free of outer framework, transport, ORM, database row, UI, or vendor-specific types.
-6. Point dependencies toward stable policy and away from replaceable details.
-7. Decide which tests protect the internal behavior and which tests protect the boundary.
-8. State non-goals so the boundary does not become a speculative abstraction.
+- **Design:** define a new boundary or a target design.
+- **Review:** assess an existing boundary, code change, or proposal and identify supported boundary changes.
+- **Migrate:** move existing callers and dependencies toward a target boundary without requiring a broad rewrite.
 
-### Review Path
+## Shared Workflow
 
-Use this path for existing code, diffs, snippets, or design proposals.
+### 1. Inspect The Evidence
 
-1. Identify the candidate boundary and its callers.
-2. List the actual public surface: exports, public methods, endpoints, events, options, configuration, or documented entry points.
-3. Infer the hidden knowledge: rules, sequencing, data access, effects, failure handling, dependency policy, or compatibility promise.
-4. Check whether callers still repeat internal ordering, branching, validation, mapping, cache, transaction, or integration details.
-5. Check whether inner code depends on outer framework, persistence, transport, UI, or vendor types.
-6. Distinguish shallow complexity from protected depth before recommending changes.
-7. Recommend the smallest durable redesign, not a broad rewrite.
+Identify the candidate boundary, its callers, supported workflows, public entry points, and compatibility surfaces. Inspect repository documentation, exports, call sites, dependency direction, tests, and change history when they can answer the design question.
 
-## Design Lenses
+Distinguish observed behavior from assumptions. Do not infer a public contract from naming or file layout alone.
 
-Apply these questions while designing or reviewing:
+### 2. Map Interface Burden And Hidden Knowledge
 
-- What should a caller be able to forget after this boundary exists?
-- What concrete design decision becomes private?
-- Which code changes for the same reason, and which code changes for a different reason?
-- Does the public API describe intent, or does it expose internal steps?
-- Can common caller workflows happen through one coherent operation instead of repeated call choreography?
-- Are special cases handled inside the module when they are part of the hidden knowledge?
-- Are safety-relevant semantics visible enough for callers to make correct decisions?
-- Does the boundary reduce coupling without adding empty ceremony?
-- Can the boundary be enforced by language, package exports, project references, lint rules, architecture tests, or review conventions?
-- Would a future internal implementation change preserve the public contract?
+List what each caller must know or coordinate. Include informal contract knowledge, not only public symbols.
 
-## Red Flags
+List the decisions the module owns or should own. Group decisions that change for the same reason, and separate decisions with independent change axes.
 
-Report these only when supported by evidence:
+Ask:
 
-- `pass-through`: methods, services, layers, or adapters mostly forward calls without adding policy, translation, validation, orchestration, or a stable abstraction
-- `classitis`: many tiny modules increase navigation while hiding little useful knowledge
-- `false-abstraction`: the API hides safety, authorization, durability, consistency, failure, or ordering semantics that callers must understand
-- `leaky-boundary`: framework, HTTP, ORM, database row, storage, transport, UI, or vendor details cross into domain or application policy
-- `empty-interface`: an interface or port exists before there is a meaningful alternative, dependency inversion need, test seam, package boundary, or compatibility promise
-- `unstable-public-api`: too many exports, flags, overloads, options, or special cases become public contract
-- `wrong-axis`: code is split by technical layer or file shape when changes actually happen by feature, use case, domain concept, or integration boundary
-- `cycle`: package, slice, or layer cycles make the intended boundary unenforceable
-- `caller-choreography`: callers must remember internal ordering, branching, retries, cache invalidation, transaction scope, mapping, or cleanup
-- `over-generalized-api`: generic operations push domain workflow reconstruction back to callers
+- What should callers be able to forget after crossing this boundary?
+- Which workflow, rule, or integration detail becomes private?
+- Does the interface express caller intent or expose implementation steps?
+- Do callers repeat sequencing, branching, validation, mapping, retries, transactions, cache invalidation, or cleanup?
+- Do framework, transport, persistence, UI, or vendor types leak into policy that should outlive them?
+- Are safety-relevant consequences visible even when their mechanics are hidden?
 
-## Protected Depth
+### 3. Choose A Boundary Move
 
-Do not flatten or delete complexity that protects:
+Choose one primary move. Combine moves only when the evidence shows distinct boundary problems.
 
-- domain invariants
-- validation and error semantics
-- authorization, consistency, transaction, retry, idempotency, cache, or event ordering rules
-- compatibility of a documented or exported public API
-- adapter, harness, plugin, or integration boundaries
-- testability of external effects
-- separation between domain/application policy and infrastructure details
-- observability, diagnostics, or recovery behavior needed at the boundary
+| Move       | Choose when                                                                                                                                            | Required result                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `preserve` | Existing complexity protects a contract, policy, dependency direction, external-effect seam, compatibility promise, diagnostics, or recovery behavior. | Keep the protected knowledge and explain why callers benefit from the boundary.               |
+| `deepen`   | Callers reconstruct workflow or internal decisions, the public surface is unstable, or infrastructure details leak outward.                            | Move coherent knowledge inward and expose intent-level operations with explicit consequences. |
+| `merge`    | A layer, wrapper, service, or interface mostly passes through calls and owns no distinct abstraction or contract.                                      | Remove ceremony while preserving any real translation, policy, or compatibility behavior.     |
+| `split`    | Internals have low cohesion, unrelated change axes, conflicting ownership, or independently evolving policies despite a small public surface.          | Create cohesive boundaries without making callers orchestrate the separated internals.        |
+| `delay`    | The change axis, caller need, alternative implementation, or stable contract is not yet demonstrated.                                                  | Keep the design focused and record the evidence that would justify a future abstraction.      |
 
-If complexity may protect one of these but the evidence is incomplete, ask a targeted question or list a follow-up instead of making a finding.
+Reject changes that merely move code, rename layers, add an interface for hypothetical variation, or reduce file count without reducing caller knowledge or protecting a real decision.
 
-## Test Strategy
+### 4. Define The Boundary Contract
 
-Match tests to the boundary being designed or changed.
+Define:
 
-- Use unit tests for hidden domain rules, state transitions, validators, parsers, normalizers, algorithms, and policy decisions.
-- Use narrow integration tests for adapters that bind ports to databases, queues, HTTP clients, file systems, framework wiring, or third-party SDKs.
-- Use contract tests for service, package, message, or API boundaries shared across independently changing consumers and providers.
-- Use property-based tests when the module promises invariants across broad input spaces.
-- Use architecture tests, lint rules, package export checks, or dependency graph checks when boundary direction, cycles, or private imports are part of the contract.
+- callers and caller-intent operations
+- formal and informal interface contract
+- hidden decisions and internal responsibilities
+- boundary data free of avoidable outer-framework or vendor coupling
+- dependency direction and ownership of abstractions
+- compatibility surfaces and error semantics
+- non-goals and intentionally visible consequences
 
-Avoid over-mocking internal collaboration. Mock or fake unstable external boundaries, clocks, ID generators, network calls, databases, filesystems, and third-party providers.
+Point dependencies toward stable policy and away from replaceable details. Let the policy owner define an abstraction only when inversion protects a real boundary, test seam, or compatibility promise.
 
-## Output Shapes
+### 5. Make The Boundary Enforceable
 
-Choose the output shape that matches the task. Keep recommendations concrete and reviewable.
+Use the strongest practical mechanism already supported by the language, build, or repository: visibility controls, explicit exports, package rules, dependency constraints, architecture tests, lint rules, or focused review conventions.
 
-### Design Output
+Prefer machine-enforced restrictions when the repository can support them. Do not propose a new dependency or governance layer when an existing mechanism can express the contract.
 
-Use this shape for design and refactor planning:
+### 6. Verify The Result
+
+Match verification to the boundary contract:
+
+- test hidden rules and state transitions through focused behavioral checks
+- test adapters at the external boundary they translate
+- test shared public contracts across independently changing consumers and providers
+- check forbidden dependencies, private imports, cycles, and exported surfaces when they are part of the design
+- compare representative callers before and after; confirm they know less and perform less choreography
+- confirm internal changes along the intended change axis can preserve the public contract
+
+Avoid over-mocking internal collaboration. Fake or mock unstable external effects only when needed to verify policy separately from infrastructure.
+
+## Incremental Migration
+
+For Migration mode:
+
+1. Visualize current callers, dependency violations, and high-cost change paths.
+2. Define the target public entry point and compatibility expectations.
+3. Prevent new violations when practical without requiring the existing baseline to be clean first.
+4. Introduce the target path and move callers in small, behavior-preserving slices.
+5. Keep temporary adapters, abstractions, or toggles explicit, owned, and removable.
+6. Remove direct internal access, obsolete entry points, temporary machinery, and dead implementations after migration.
+7. Strengthen enforcement only as the migrated boundary becomes authoritative.
+
+Do not propose a big-bang rewrite when a compatible incremental path can establish the same boundary. Do not leave migration scaffolding as an accidental permanent API.
+
+## Uncertainty And Stop Conditions
+
+State assumptions and offer compatible alternatives when missing evidence does not prevent a useful recommendation.
+
+Ask a targeted question before selecting or implementing a boundary change only when the answer materially affects:
+
+- supported callers or compatibility promises
+- safety, authorization, consistency, durability, or data-loss semantics
+- ownership or dependency direction
+- whether complexity is shallow ceremony or protected depth
+
+Report an investigation as a follow-up instead of a finding when evidence does not prove the problem. Preserve existing observable behavior unless the requested outcome explicitly changes the contract.
+
+## Output Contract
+
+Adapt the response to the task and omit empty sections. Include:
 
 ```text
-Verdict: <one-sentence design direction>
+Verdict: <one-sentence boundary decision>
+
+Evidence:
+- <specific caller, contract, dependency, or change-axis evidence>
 
 Boundary:
-- Name:
+- Move: <preserve|deepen|merge|split|delay>
 - Callers:
-- Hidden knowledge:
-- Public surface:
-- Internal responsibilities:
-- Dependencies:
-- Boundary data:
-- Tests:
-- Non-goals:
+- Interface contract:
+- Hidden decisions:
+- Dependency direction:
+- Enforcement:
 
-Risks:
-- <risk and mitigation>
+Migration: <only when needed>
+Verification: <observable checks>
+Risks or unknowns: <material caveat and mitigation or needed evidence>
+Next action: <smallest useful next step>
 ```
 
-### Review Output
-
-Use this shape for code, diff, snippet, or design review:
-
-```text
-Verdict: <one-sentence depth assessment>
-
-Findings:
-- <location> [<red-flag>] <problem>. Recommendation: <small durable redesign>. Evidence: <specific evidence>. Risk: <low|medium|high>.
-
-Protected Depth:
-- <location> Keep this complexity. Reason: <protected design knowledge or boundary contract>.
-
-Possible Follow-ups:
-- <location or boundary> <investigation>. Needs: <missing evidence>.
-
-Final:
-<short summary of the boundary direction>
-```
-
-Omit empty sections except `Verdict` and `Final`.
-
-## Decision Rules
-
-Prefer local boundary improvements when they preserve public contracts and caller behavior.
-
-Do not recommend a new abstraction unless it hides real knowledge, removes caller choreography, isolates a real dependency boundary, or matches an established local pattern.
-
-Do not recommend collapsing a boundary only because its implementation is short. First check whether it protects a contract, dependency direction, test seam, or change axis.
-
-Do not move logic across layers to reduce file count if doing so leaks infrastructure details into policy or forces callers to learn internal sequencing.
-
-Treat public APIs, package exports, adapter contracts, persistence formats, message shapes, and documented extension points as compatibility surfaces unless the task explicitly changes them.
-
-## Stop Conditions
-
-Ask a targeted question before recommending a boundary change when:
-
-- supported callers or compatibility promises are unknown
-- the public API might need to change
-- safety, authorization, consistency, durability, or data-loss semantics are unclear
-- the evidence cannot distinguish shallow ceremony from protected depth
-
-Stop at a possible follow-up instead of a finding when the available code or design note does not prove the problem.
+For code review, attach each finding to a concrete location and explain the caller impact. For a short response, preserve the verdict, strongest evidence, material caveat, and next action; remove repetition and optional background first.
