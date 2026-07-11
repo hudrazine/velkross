@@ -1,7 +1,7 @@
 {
   "name": "velkross",
-  "version": "0.1.0",
-  "description": "Mergeability-first engineering guidance and skills for Cursor.",
+  "version": "0.2.0",
+  "description": "Mergeability-first guidance and reusable skills for scoped, durable, verifiable code changes.",
   "author": {
     "name": "Hudrazine"
   },

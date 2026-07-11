@@ -1,7 +1,7 @@
 {
   "name": "velkross",
-  "version": "0.1.0",
-  "description": "Mergeability-first engineering guidance and reusable skills for Codex.",
+  "version": "0.2.0",
+  "description": "Mergeability-first guidance and reusable skills for scoped, durable, verifiable code changes.",
   "author": {
     "name": "Hudrazine",
     "url": "https://github.com/hudrazine"
@@ -14,8 +14,8 @@
   "hooks": "./hooks/codex-hooks.json",
   "interface": {
     "displayName": "Velkross",
-    "shortDescription": "Keep Codex changes scoped, reviewable, and merge-ready.",
-    "longDescription": "Velkross adds Mergeability-first Engineering guidance, lifecycle hooks, and reusable skills that help Codex keep code changes scoped, durable, typed, tested, and ready to review.",
+    "shortDescription": "Keep Codex changes scoped, durable, and ready to merge.",
+    "longDescription": "Velkross combines always-on Mergeability-first Engineering guidance with reusable skills to help Codex make focused changes that fit the existing design, preserve relevant contracts, and verify behavior in proportion to risk.",
     "developerName": "Hudrazine",
     "category": "Productivity",
     "capabilities": ["Hooks", "Skills"],

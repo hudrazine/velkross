@@ -16,7 +16,7 @@ const codexHookCommand = {
 
 test("declares Codex plugin entrypoints", () => {
   expect(readJson("../.codex-plugin/plugin.json")).toMatchObject({
-    version: "0.1.0",
+    version: "0.2.0",
     skills: "./skills/",
     hooks: "./hooks/codex-hooks.json",
   });

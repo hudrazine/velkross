@@ -16,7 +16,7 @@ function fileExists(path) {
 
 test("declares Cursor plugin entrypoints", () => {
   expect(readJson("../.cursor-plugin/plugin.json")).toMatchObject({
-    version: "0.1.0",
+    version: "0.2.0",
     skills: "./skills/",
     rules: "./rules/",
   });
