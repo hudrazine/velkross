@@ -1,483 +1,160 @@
 ---
 name: tdd
-description: Apply practical test-driven development for adding or changing behavior, fixing bugs with regression tests, refactoring while preserving observable behavior, and code changes that can be driven by examples. Use a small List → Red → Green → Refactor loop, with lightweight variants for UI, integration, database, CLI, file-system, and external-boundary work. Avoid strict TDD for visual-only styling, exploratory spikes, unknown SDK investigation, mechanical migrations, or documentation-only changes unless tests clarify the final behavior.
+description: Apply practical, language-agnostic test-driven development when implementing observable behavior, reproducing and fixing bugs, or changing untested code where executable examples can guide the design. Use a small List → Red → Green → Refactor loop, with regression-first, characterization-first, refactoring, and spike-then-test variants. Do not use strict TDD for visual-only styling, exploratory work before behavior is understood, mechanical migrations, or documentation-only changes unless tests clarify a real contract or risk.
 ---
 
 # TDD
 
-Use this skill to implement software through a practical test-driven development loop.
-
-TDD is not merely "write tests first." Treat it as a design and feedback discipline:
-
-> Describe the next observable behavior, prove it is missing with a failing test, implement only enough to satisfy it, then improve the design while tests stay green.
-
-## Core Loop
-
-Use this loop by default:
+Implement software through short feedback loops that make each behavior and design decision observable.
 
 ```text
 List → Red → Green → Refactor → Repeat
 ```
 
-- **List**: Keep a short list of observable behaviors to implement or protect.
-- **Red**: Write one focused test that fails because the behavior is missing or wrong.
-- **Green**: Make the smallest honest production change that satisfies the test.
-- **Refactor**: Improve design only while relevant tests are passing.
-- **Repeat**: Return to the list and choose the next smallest behavior deliberately.
+Treat this as a design discipline, not merely a requirement to write tests first. Preserve the user's requested workflow and apply the strongest test-driven feedback that fits the task.
 
-## Calibrate the Loop
+## Choose the Operating Mode
 
-Choose the lightest loop that still protects the behavior and design decision being made.
+Choose the mode before editing production code.
 
-- **Strict loop**: Use for domain logic, parsers, validators, formatters, converters, state machines, permission rules, date or money logic, and public API behavior.
-- **Regression-first**: For reported bugs, reproduce the bug with a failing test before fixing it whenever practical.
-- **Characterization-first**: For refactoring untested code, first capture current observable behavior, then refactor while tests stay green.
-- **Lightweight loop**: For UI components, integration boundaries, database access, external API clients, command-line behavior, and file-system behavior, keep the same Red/Green discipline but use the most useful test level and avoid over-isolating framework behavior.
-- **Spike then test**: For unknown SDKs or exploratory work, do the smallest useful spike first, then convert the discovered final behavior into tests before treating the implementation as complete.
-- **Skip strict TDD unless useful**: For visual-only styling, throwaway spikes, mechanical migrations, or documentation-only changes, use tests only when they clarify behavior or reduce real risk.
+- **Behavior change**: Use the full List → Red → Green → Refactor loop.
+- **Bug fix**: Reproduce the reported failure with a regression test, then make the smallest fix.
+- **Untested existing code**: Capture relevant current behavior with a characterization test, then add a failing test for the desired change.
+- **Pure refactoring**: Establish relevant Green coverage and refactor in small steps. Do not manufacture a failing test when observable behavior must not change.
+- **Exploration**: Run the smallest useful spike when an SDK, algorithm, or external behavior is unknown. Keep or discard the spike deliberately, then test the stable behavior before treating production work as complete.
+- **Non-behavioral work**: Skip strict TDD for visual-only styling, mechanical migrations, generated output, and documentation-only changes unless an executable check protects a real contract or risk.
 
-If the user asks for a different workflow, follow that request and preserve as much test-driven feedback as still fits.
+## Prepare
 
-## Core Rules
+Before starting a cycle:
 
-### Rule 1: Keep a Test List
+1. Identify the target behavior and useful observation boundary.
+2. Inspect nearby code and tests for the established framework, naming, fixtures, doubles, and commands.
+3. Run the narrowest relevant existing tests to establish a known baseline.
+4. Create or infer a short test list of observable behaviors, including important boundaries and failures.
+5. Choose the smallest next example that will clarify the contract or force useful generalization.
 
-Before changing production code, create or infer a short test list.
+Do not introduce a new test framework when the repository already provides a practical one.
 
-The test list should describe externally visible behavior, not implementation steps.
+If the baseline is already failing, separate pre-existing failures from failures introduced by the change. Continue only when the relevant behavior can still be isolated and verified; never report a pre-existing failure as a new Red or Green result.
 
-Good test-list items:
-
-```text
-- accepts a valid email address
-- rejects an empty user name
-- returns a stable error code for invalid input
-- preserves existing metadata when updating a record
-```
-
-Bad test-list items:
+Write test-list items as behavior:
 
 ```text
-- add an if statement
-- use a regex
-- mock the service class
-- refactor the parser
+- accepts a valid identifier
+- rejects an empty identifier with a stable error code
+- preserves metadata when updating a record
 ```
 
-Keep the list small and update it as new cases are discovered.
+Do not write implementation tasks such as “add an if statement,” “use a regex,” or “mock the service.” Add discoveries to the list instead of expanding the current cycle.
 
-### Rule 2: One Behavior Per Cycle
+## Run the Cycle
 
-Each TDD cycle should target one observable behavior.
+### Red: Prove the Behavior Is Missing
 
-Do not combine multiple behavior changes in one test unless they are inseparable.
+Write one focused executable example with one primary reason to fail. Multiple assertions are acceptable when they describe one coherent observable result.
 
-Prefer this:
+Prefer tests with:
 
-```text
-- rejects an empty name
-- rejects an invalid email
-- creates a user for valid input
-```
+- a specification-like name
+- minimal relevant setup
+- explicit input and expected outcome
+- assertions on public behavior or meaningful side effects
+- failure output that explains the unmet contract
 
-Avoid this:
+Run the narrowest relevant command and inspect the failure. Proceed only when it fails because the behavior is missing or wrong, not because of syntax, imports, setup, fixtures, or an assertion that never ran.
 
-```text
-- validates input and creates a user correctly
-```
+If the test passes immediately, do not force a Red by damaging working code. Determine whether the test is weak, the behavior already exists, or the reproduction conditions are incomplete. Strengthen the test, mark the behavior complete, or investigate the missing precondition as appropriate.
 
-### Rule 3: Red Must Fail for the Right Reason
+### Green: Satisfy the Current Contract
 
-A Red test is valid only if it fails because the intended behavior is missing or wrong.
-
-Invalid Red states include:
-
-- import errors unrelated to the behavior
-- syntax errors
-- wrong test setup
-- missing fixture data
-- assertion does not execute
-- test passes immediately when it should fail
-
-Before implementing production code, confirm the failure reason.
-
-### Rule 4: Green Means Minimum Useful Implementation
-
-When making a test pass, write the smallest production change that honestly satisfies the current behavior.
-
-Do not implement future cases just because they are obvious.
-
-Allowed during Green:
-
-- straightforward minimal logic
-- temporary duplication
-- simple hardcoded behavior if the current test is intentionally narrow
-- small scaffolding needed to reach the behavior
-
-Not allowed during Green:
-
-- broad abstractions not demanded by tests
-- speculative options
-- unrelated cleanup
-- changing multiple modules without need
-- adding features not represented in the test list
-
-### Rule 5: Refactor Only While Green
-
-Refactoring happens only when the relevant tests are passing.
-
-During Refactor:
-
-- do not change observable behavior
-- improve names
-- remove duplication
-- clarify boundaries
-- simplify conditionals
-- extract functions only when the shape is justified
-- improve test readability
-- preserve public contracts unless a new Red test requires changing them
-
-If behavior must change, stop refactoring and start a new Red cycle.
-
-### Rule 6: Test Behavior, Not Implementation Details
-
-Tests should describe what the system does from a useful boundary.
-
-Prefer testing:
-
-- returned values
-- thrown errors or result objects
-- persisted state
-- emitted events
-- rendered user-visible behavior
-- externally visible side effects
-- public API contracts
-
-Avoid testing:
-
-- private methods
-- internal call order
-- incidental intermediate values
-- implementation-specific class structure
-- mocks of ordinary internal functions
-- details that make refactoring harder
-
-### Rule 7: Use Mocks Only at Boundaries
-
-Use mocks, fakes, or stubs for external or unstable dependencies:
-
-- network APIs
-- databases
-- file systems
-- clocks
-- random ID generators
-- email, SMS, or payment providers
-- OS or platform APIs
-- third-party SDKs
-
-Avoid mocking ordinary internal functions. If a unit requires excessive mocking, prefer redesigning dependencies so the core behavior is easier to test.
-
-### Rule 8: Capture New Discoveries Without Derailing
-
-When new cases appear during implementation, add them to the test list instead of implementing them immediately.
-
-Examples:
-
-```text
-- What should happen for whitespace-only input?
-- Should duplicate IDs be rejected?
-- Should full-width numbers be accepted?
-- Should errors use typed codes instead of messages?
-```
-
-Finish the current cycle first, then choose the next item deliberately.
-
-## Workflow
-
-### Step 0: Inspect Existing Conventions
-
-Before writing tests:
-
-1. Identify the language, test framework, package manager, and existing test commands.
-2. Inspect nearby tests for naming, fixture, mocking, and assertion style.
-3. Follow existing project conventions unless they are clearly broken.
-4. Prefer the smallest relevant test command before running broad suites.
-
-Do not introduce a new test framework if the project already has one.
-
-### Step 1: Build the Test List
-
-Create a compact list of observable behaviors.
-
-Use this format internally or in concise progress/final summaries:
-
-```text
-Test List
-- [ ] behavior A
-- [ ] behavior B
-- [ ] behavior C
-```
-
-Mark completed items as the implementation progresses.
-
-### Step 2: Choose the Next Smallest Behavior
-
-Pick the next item using this priority:
-
-1. regression for a reported bug
-2. simplest failing case that clarifies the API
-3. most central happy path
-4. important boundary case
-5. error case
-6. integration or edge case
-
-Prefer tests that teach the implementation something new.
-
-### Step 3: Write the Red Test
-
-Add one focused test.
-
-A good test has:
-
-- a name that reads like a specification
-- minimal setup
-- one main reason to fail
-- clear input
-- clear expected output
-- no dependency on unrelated behavior
-
-Example structure:
-
-```text
-given a specific state/input
-when the behavior is invoked
-then the expected observable result occurs
-```
-
-Run the narrowest relevant test command and confirm it fails for the expected reason.
-
-### Step 4: Make It Green
-
-Implement only what is needed for the current test.
+Make the smallest honest production change that satisfies the current example and preserves established behavior.
 
 During Green:
 
-- prefer simple code over clever code
-- keep changes local
-- preserve existing behavior
-- avoid premature abstraction
-- avoid unrelated cleanup
-- avoid untested behavior unless required to compile or reach the tested path
+- keep the change local and straightforward
+- avoid unrelated cleanup and speculative options
+- tolerate temporary duplication when it keeps the step small
+- add only scaffolding required to reach the tested behavior
+- run the focused test, then relevant nearby tests
 
-Run the same narrow test command again.
+A narrow hardcoded implementation may be used as a temporary TDD step when the current example intentionally leaves the general rule unknown. Add the next example that forces generalization. Do not finish with a hardcoded special case when the known contract is broader.
 
-The cycle is not Green until the target test passes.
+### Refactor: Improve Structure While Green
 
-### Step 5: Refactor
+Improve production and test code only while the relevant tests pass.
 
-With tests passing, improve the design.
+Use the Green state to:
 
-Look for:
+- clarify names and boundaries
+- remove meaningful duplication
+- simplify branching and state
+- separate decisions from effects
+- improve test readability and setup
+- delete premature or obsolete abstractions
 
-- duplication
-- unclear names
-- excessive branching
-- mixed responsibilities
-- hidden dependencies
-- repeated setup in tests
-- awkward public API shape
-- code that became testable only through implementation details
+Do not change observable behavior during Refactor. If a behavior change becomes necessary, return to the test list and begin a new Red cycle.
 
-After refactoring, rerun the relevant tests.
+### Repeat Deliberately
 
-If refactoring breaks a test, either restore behavior or start a new Red cycle if the behavior should change.
+Mark the completed item, record new discoveries, and choose the next example. Prefer this progression when it teaches the design something useful:
 
-### Step 6: Repeat
+1. regression for a reported bug
+2. simplest representative behavior
+3. a second example that defeats a special-case implementation
+4. important boundary or failure
+5. state transition or integration edge
 
-Return to the test list.
+Do not code every imagined case in advance. Stop when the requested contract is implemented, material risks have proportionate coverage, and remaining gaps are explicit.
 
-Continue until:
+## Choose the Test Boundary
 
-- the requested behavior is complete
-- the bug is protected by a regression test
-- important edge cases are covered
-- remaining cases are explicitly deferred
-- relevant tests pass
+Choose the narrowest boundary that observes the real behavior with fast, stable, maintainable feedback. Do not default mechanically to the smallest function or to end-to-end testing.
 
-## Existing Code, Bugs, and Refactors
+- Use **unit tests** for pure rules, parsing, validation, formatting, and state transitions.
+- Use **integration tests** for persistence semantics, transactions, serialization, file systems, framework wiring, and external adapters.
+- Use **component tests** for rendered UI behavior and interaction state.
+- Use **end-to-end tests** sparingly for critical flows or contracts that lower levels cannot establish confidently.
 
-### Existing Code Without Tests
+Avoid duplicating the same assertion at every level unless the risk justifies it.
 
-When modifying untested existing code:
+Test observable outcomes such as returned values, errors, persisted state, emitted events, rendered behavior, and meaningful side effects. Avoid private methods, incidental call order, internal structure, and intermediate values unless that interaction is itself the contract.
 
-1. First write a characterization test for current behavior if feasible.
-2. If the behavior is buggy, write a failing regression test that captures the desired behavior.
-3. Make the minimal fix.
-4. Refactor only after tests are green.
+Use mocks, fakes, or stubs at slow, unstable, nondeterministic, destructive, or externally controlled boundaries. Prefer real collaborators when they are fast and reliable. Excessive internal mocking usually signals the wrong observation boundary or a dependency that should be made explicit.
 
-If the code is too coupled to test directly, first introduce the smallest seam that enables testing. Avoid large rewrites before a test harness exists.
+Keep tests repeatable and independent. Control relevant clocks, randomness, identifiers, time zones, environment, shared state, network access, and concurrency. Introduce the smallest seam needed for control; do not begin with a broad rewrite merely to make code testable.
 
-### Bugs
+Use precise assertions by default. Keep snapshots small and intentional. Use coverage to find unexamined risk, not as a substitute for meaningful behavioral evidence.
 
-For bug fixes, use this stricter flow:
+## Handle Verification Limits
 
-```text
-1. Reproduce the bug with a failing test.
-2. Confirm the test fails for the reported reason.
-3. Apply the smallest fix.
-4. Confirm the regression test passes.
-5. Run nearby tests.
-6. Refactor only if the tests remain green.
-```
+When a practical automated test cannot be written or run:
 
-Do not fix a bug only by inspection unless no practical test can be written. If no test can be written, explain why and minimize the change.
+1. Explain the concrete limitation.
+2. Perform the strongest available deterministic check.
+3. Keep the production change as small as possible.
+4. Provide the exact test or command that should be run later when known.
+5. Report the remaining verification gap without presenting the work as fully proven.
 
-### Refactoring
+Do not silently skip, disable, weaken, or rewrite an effective test merely to obtain Green. Change a test's expectation only when the intended contract changed.
 
-For pure refactoring:
+## Completion Contract
 
-1. Find or add characterization coverage around the behavior that must not change.
-2. Run tests and establish Green.
-3. Refactor in small steps.
-4. Run tests after each meaningful step.
-5. Do not mix behavior changes into the refactor.
+Finish only when:
 
-If behavior changes become necessary, stop and start a Red cycle for the new behavior.
+- the requested observable behavior is implemented
+- bug fixes have regression coverage when practical
+- relevant focused tests pass
+- broader checks have been run in proportion to the affected boundary and risk
+- refactoring has preserved Green
+- no temporary special case violates the known contract
+- deferred cases and verification gaps are explicit
 
-## Choosing Test Level
+Report concisely:
 
-Prefer the lowest test level that gives confidence without coupling to implementation details.
+1. the behavior implemented, fixed, or preserved
+2. the tests added or changed
+3. the commands run and their results
+4. any intentionally deferred case, remaining risk, or untested area
 
-Use unit tests for:
-
-- pure logic
-- validation
-- parsing
-- formatting
-- state transitions
-- domain rules
-
-Use integration tests for:
-
-- database behavior
-- API boundaries
-- file-system behavior
-- framework wiring
-- serialization/deserialization
-
-Use component tests for:
-
-- user-visible UI behavior
-- form validation
-- interaction state
-
-Use E2E tests sparingly for:
-
-- critical user flows
-- cross-system smoke coverage
-- behavior that cannot be trusted through lower-level tests
-
-Do not test the same behavior redundantly at every level unless the risk justifies it.
-
-## Designing for Testability
-
-Make behavior testable by separating core logic from effects.
-
-Prefer this shape:
-
-```text
-core behavior: pure or mostly pure
-dependencies: passed in explicitly
-effects: isolated at boundaries
-```
-
-Useful injectable dependencies include:
-
-```text
-clock
-id generator
-logger
-repository
-HTTP client
-file system adapter
-transaction runner
-configuration provider
-```
-
-Avoid hiding unstable dependencies inside domain logic.
-
-For example, prefer passing a clock over calling the real system time inside business rules.
-
-## Test Quality and Anti-Patterns
-
-A good TDD test should be behavior-oriented, focused, deterministic, readable, independent, fast enough for frequent execution, specific about the expected result, and resilient to harmless refactoring.
-
-A poor TDD test is usually too broad, too dependent on mocks, too coupled to internals, vague in its assertion, slow without reason, hard to understand, or brittle under refactoring.
-
-Avoid these patterns:
-
-- **Test-after disguise**: Writing production code first and then adding tests afterward is not TDD. Recover by writing the next behavior as a Red test before continuing.
-- **Multi-behavior Red**: A single failing test that covers many behaviors makes diagnosis hard. Split it into smaller cases.
-- **Green by overbuilding**: Do not implement the whole imagined final design to pass one small test. Let later tests force generalization.
-- **Refactor while Red**: Do not restructure code while tests are failing unless the failure is caused by an incomplete mechanical edit. Get back to Green first.
-- **Mock-driven internals**: Do not verify internal collaboration details unless they are the meaningful contract. Prefer testing the observable result.
-- **Snapshot abuse**: Avoid large snapshots as the main TDD assertion. Use precise assertions for behavior. Snapshots are acceptable only when they are small, intentional, and reviewed.
-- **Coverage theater**: Do not add tests only to increase coverage numbers. A useful test protects behavior or design intent.
-
-## Working Protocol
-
-Before editing, establish:
-
-```text
-- target behavior
-- existing test framework
-- likely test file location
-- narrow test command
-- initial test list
-```
-
-If the repository conventions are discoverable, follow them without asking.
-
-During editing:
-
-- work in small cycles
-- track the current test-list item, Red result, Green change, refactor, and test result internally
-- do not report every cycle unless the user asks for a detailed TDD trace or the work is long enough that concise progress updates are useful
-- avoid large unrelated changes
-
-If tests cannot be run, say so clearly and provide the exact command that should be run.
-
-## Final Summary
-
-When finishing a task, include:
-
-1. what behavior was implemented or fixed
-2. what tests were added or changed
-3. which test commands were run
-4. whether the relevant tests passed
-5. any remaining cases, risks, or untested areas intentionally left out
-
-Keep the summary concise but specific.
-
-Before finalizing, verify:
-
-```text
-[ ] A test list exists or was inferred.
-[ ] Each implemented behavior had a focused test when practical.
-[ ] At least one relevant test failed before the implementation when practical.
-[ ] Red failed for the expected reason.
-[ ] Green used the smallest useful implementation.
-[ ] Refactoring happened only while tests were green.
-[ ] Tests describe behavior instead of implementation details.
-[ ] Mocks are limited to external boundaries.
-[ ] New discoveries were added to the test list instead of derailing the cycle.
-[ ] Relevant tests were run or the reason they could not run is documented.
-```
-
-## Final Principle
-
-The goal is not to maximize the number of tests.
-
-The goal is to make every small design decision safe, observable, and reversible.
-
-Prefer small steps, clear behavior, fast feedback, and continuous cleanup.
+The goal is not maximal test count or coverage. Use small executable examples to reach a correct, maintainable change with credible evidence.
