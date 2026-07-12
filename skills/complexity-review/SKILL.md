@@ -1,149 +1,105 @@
 ---
 name: complexity-review
-description: Review implemented code, diffs, or snippets for unnecessary or unjustified complexity. Use for simplification-focused reviews that look for needless abstractions, unused options, redundant dependencies, avoidable state, duplicated logic, or over-engineering. Avoid for implementation planning, general correctness, security, performance, accessibility, or architecture review.
+description: Review implemented code, diffs, or snippets for unjustified maintenance complexity and concrete behavior-preserving simplifications. Use for simplification-focused reviews of needless abstractions, unused API or configuration, redundant dependencies, avoidable state or control flow, duplicated logic, test indirection, or over-engineering. Avoid for implementation planning, general correctness, security, performance, accessibility, module-boundary, or architecture review.
 ---
 
 # Complexity Review
 
 ## Purpose
 
-Review the provided code, diff, or snippet for complexity that lacks a current, evidence-backed reason to exist.
+Review implemented code for complexity that lacks a current, evidence-backed reason to exist.
 
-Produce an evidence-backed simplification review that reduces unjustified maintenance surface while preserving behavior, safety, compatibility, readability, and reviewability.
+Reduce unjustified maintenance surface while preserving behavior, safety, compatibility, contracts, readability, operability, and useful verification. Optimize for justified simplicity, not fewer lines.
 
-This is a focused complexity review. It is not an implementation-planning, general correctness, security, performance, accessibility, or architecture review.
+Treat the review as the requested outcome. Do not implement a simplification unless the user also asks for changes.
 
-## Core Standard
+## Review Standard
 
-Optimize for justified simplicity, not fewer lines.
+Report a simplification only when the available evidence supports all of the following:
 
-Report complexity only when the available evidence shows it lacks a current reason to exist and can be simplified without changing behavior, weakening safety, breaking contracts, reducing readability, or removing useful verification.
+- the complexity has no current responsibility or requirement
+- the proposed change is concrete and local enough to review
+- relevant behavior and contracts remain unchanged
+- safety, readability, diagnostics, and effective test coverage are not weakened
+- the removed maintenance surface justifies the change and its risk
 
-Do not reward code golf or suggest a shorter version that is harder to understand.
+Reject code golf, speculative cleanup, and shorter code that is harder to understand. Prefer the smallest durable change that removes the unjustified surface.
 
-## Review Procedure
+## Review Method
 
-1. Identify the review context: diff, snippet, nearby files, or repository access.
-2. Gather only the evidence needed to make safe simplification claims.
-3. Find candidate complexity surfaces: abstraction, API, configuration, dependency, state, control flow, duplication, or test support.
-4. Reject candidates that protect behavior, safety, contracts, operability, or maintainability.
-5. For each remaining candidate, choose one action: delete, inline, replace, consolidate, or shrink.
-6. Assign risk based on evidence strength and compatibility impact.
-7. Stop when safe findings are available or no safe simplifications can be proven.
+1. Identify the supplied scope and the evidence available from the diff, snippet, nearby files, or repository.
+2. Inspect the most relevant complexity surfaces and prioritize candidates with meaningful maintenance cost.
+3. Test each candidate against protected behavior and contracts before recommending it.
+4. Gather only the claim-specific evidence needed to establish that the change is safe.
+5. Report supported findings, useful explanations of kept complexity, and high-value investigations that remain unproven.
+6. Stop when the material candidates in scope have enough coverage to support the verdict, further search is unlikely to change it, or the evidence boundary has been reached.
+
+Do not continue searching to increase the number of findings, but do not stop merely because the first safe finding is available.
 
 ## Complexity Surfaces
 
-Classify each finding by the maintenance surface it removes; use these labels as review lenses, not as an exhaustive checklist:
+Use these as review lenses rather than an exhaustive checklist:
 
-- `abstraction`: interfaces, base classes, adapters, strategies, plugin layers, factories, wrappers, or indirection with no current need
-- `api`: exports, public methods, options, parameters, overloads, events, or extension points not supported by current usage or requirements
-- `configuration`: flags, environment variables, settings, mode switches, or defaults no current caller uses
-- `dependency`: libraries, utilities, polyfills, or framework additions that duplicate existing project, platform, runtime, or standard-library behavior
-- `state`: caches, lifecycle hooks, mutable state, synchronization, retries, queues, or invalidation logic without a current failure mode or caller need
-- `control-flow`: branches, fallbacks, special cases, or mode handling that can be collapsed without changing behavior
-- `duplication`: repeated or hand-written logic that can be replaced by existing project patterns, standard-library features, or clearer direct code
-- `test-support`: test helpers, fixtures, mocks, or test-only abstractions that add indirection without improving behavior verification
+- `abstraction`: interfaces, base classes, adapters, strategies, factories, wrappers, or indirection with no current responsibility
+- `api`: exports, methods, options, parameters, overloads, events, or extension points with no supported caller or requirement
+- `configuration`: flags, environment variables, settings, modes, or defaults with no current use
+- `dependency`: libraries, utilities, or polyfills that duplicate suitable project, runtime, platform, or standard-library behavior
+- `state`: caches, lifecycle hooks, mutable state, synchronization, retries, queues, or invalidation without a current failure mode or caller need
+- `control-flow`: branches, fallbacks, special cases, or modes that can be collapsed without changing behavior
+- `duplication`: repeated or hand-written logic that an existing project pattern or clearer direct code can replace
+- `test-support`: helpers, fixtures, mocks, or test-only abstractions that add indirection without improving behavioral verification
+
+Classify a supported finding with one action: `delete`, `inline`, `replace`, `consolidate`, or `shrink`.
 
 ## Protected Complexity
 
-Do not simplify away complexity that protects:
+Preserve complexity that currently protects:
 
-- `behavior`: correctness, validation, error semantics, type safety, and data-loss protection
-- `safety`: security, accessibility, and compatibility
-- `contracts`: public APIs, documented extension points, adapter boundaries, and harness boundaries
-- `operability`: observability, debuggability, and test coverage
-- `maintainability`: local conventions, clear boundaries, readability, and future change safety
+- correctness, validation, error semantics, type safety, or data-loss prevention
+- security, accessibility, or compatibility
+- public APIs, documented extension points, adapters, or harness boundaries
+- observability, debuggability, recovery behavior, or effective test coverage
+- clear ownership, local conventions, readability, or known future-change safety
 
-Treat exported APIs, compatibility layers, adapters, harness integrations, and documented extension points as protected unless the available evidence proves they are unused and unsupported.
+Treat exported APIs, compatibility layers, adapters, harness integrations, and documented extension points as protected unless evidence establishes that they are unused and unsupported.
 
-## Evidence Rules
+Do not disguise a correctness, security, performance, accessibility, or architecture concern as a simplification finding. Mention an adjacent concern only when it materially prevents a safe simplification, and route broader review to the appropriate task.
 
-Match the strength of each claim to the available context.
+## Evidence Routing
 
-- With a diff only, report only what the diff proves.
-- With a pasted snippet only, report only what the snippet proves. Do not invent repository context.
-- With nearby context, use local call sites and existing project patterns.
-- With repository access, inspect imports, exports, call sites, tests, configuration, documentation, package scripts, and package usage before claiming something is unused, redundant, or single-use.
+Match each claim to the context and evidence it actually requires:
 
-When a simplification depends on an assumption, state the assumption in `Safe because:` and mark the risk as `medium`.
+- For unused API, configuration, or abstraction claims, inspect relevant exports, callers, documentation, configuration, and supported extension points.
+- For dependency replacement, compare the used behavior, edge cases, compatibility range, and available project, runtime, platform, or standard-library capability.
+- For state or control-flow removal, inspect lifecycle, failure paths, ordering, concurrency, cleanup, and tests where relevant.
+- For consolidation, confirm that the candidate paths share behavior, error semantics, and ownership rather than merely resembling one another.
+- For test-support removal, confirm that no behavioral coverage, diagnostic value, or external-effect seam is lost.
 
-If an idea is plausible but not safely actionable, omit it or list it under `Possible Follow-ups`.
+With only a diff or snippet, make only claims that the supplied material proves and do not invent repository context. With repository access, inspect beyond the immediate file only when the claim depends on it.
 
-## Finding Actions
+Do not turn missing evidence into a finding. Omit a weak idea or report it as a possible follow-up with the exact evidence needed to decide it.
 
-Each finding tag pairs one complexity surface with one action: `[<surface>/<action>]`.
+## Risk
 
-Use one action per finding:
+Use risk to describe the impact of making an evidence-supported change, not confidence in an unsupported assumption:
 
-- `delete`: remove unused or redundant code with no replacement
-- `inline`: remove unnecessary indirection by moving behavior to the caller
-- `replace`: replace custom or third-party behavior with an existing project, standard-library, runtime, platform, or native feature
-- `consolidate`: merge duplicated logic into an existing pattern without creating a speculative abstraction
-- `shrink`: express the same behavior more directly without changing the surrounding structure
+- `low`: behavior preservation is clear and local, with no public contract or compatibility impact
+- `medium`: evidence supports the simplification, but verification spans multiple callers, lifecycle behavior, or compatibility-sensitive code
 
-## Risk Levels
+Keep high-risk changes, public contract changes, broad rewrites, module moves, and harness-boundary changes out of findings. Report them only as possible follow-ups when investigation would be valuable. Use a boundary or architecture review when the decision changes what callers must know rather than locally removing maintenance surface.
 
-Use one risk level per finding:
+## Output Contract
 
-- `low`: behavior preservation is clear, local, and has no public API or compatibility impact
-- `medium`: likely safe, but depends on caller behavior, compatibility assumptions, or test coverage
+Lead with a one-sentence verdict. For each finding, include:
 
-Do not report high-risk ideas as findings. Put them under `Possible Follow-ups`.
+- a concrete file location, diff hunk, or snippet identifier
+- one `[<surface>/<action>]` classification
+- the proposed simplification and replacement, when applicable
+- the evidence that makes it safe
+- `low` or `medium` change risk and any material caveat
 
-## Output Shape
+Include `Kept Complexity` only when explaining a tempting but unsafe simplification would prevent churn. Include `Possible Follow-ups` only for a concrete, valuable investigation, and state the missing evidence.
 
-Start with a one-sentence verdict.
+If no finding is supported, say that no safe simplification was found and whether the existing complexity appears justified or the supplied context is insufficient.
 
-```text
-Verdict: <one-sentence simplification assessment>
-
-Findings:
-- <location> [<surface>/<action>] <simplification>. Replace with: <replacement-or-none>. Safe because: <evidence>. Risk: <low|medium>.
-
-Kept Complexity:
-- <location> Keep this complexity. Reason: <current justification>.
-
-Possible Follow-ups:
-- <location> [<surface>/<action>] <possible simplification>. Risk: high. Needs: <missing evidence>.
-
-Final:
-<maintenance-surface summary or no-safe-simplifications conclusion>
-```
-
-Omit empty sections except `Verdict` and `Final`.
-
-## Decision Rules
-
-Prefer local simplifications that preserve the current behavior and contract.
-
-Do not recommend redesigns, broad rewrites, module moves, public API changes, compatibility changes, or harness-boundary changes unless the user explicitly asks for that scope.
-
-A simplification is reportable only when it is:
-
-- behavior-preserving
-- concrete and local enough to review
-- supported by the available code, diff, snippet, tests, configuration, documentation, or package usage
-- scoped to what the available context can prove
-- not weakening protected complexity
-
-Prefer the smallest change that removes the unjustified surface.
-
-Do not remove actual test coverage merely to reduce code.
-
-A finding is invalid without a concrete location, surface, action, change, replacement, safety reason, and risk level.
-
-Use `Kept Complexity` only when a tempting simplification was considered but rejected, and explaining why helps prevent unsafe churn.
-
-Use this especially for public APIs, compatibility layers, validation, security, tests, adapter boundaries, and harness boundaries.
-
-For pasted snippets or partial diffs, identify the snippet or diff hunk instead of inventing repository paths or line numbers.
-
-## Stop Conditions
-
-Use the minimum context needed to make evidence-backed simplification claims.
-
-Stop once the review can produce concrete, safe findings or conclude that no safe simplifications are available.
-
-Do not continue searching only to increase the number of findings.
-
-If the available context cannot prove that a simplification is safe, omit it or put it under `Possible Follow-ups`.
+Adapt headings and prose to the user's language and requested response style. Preserve the verdict, evidence, material caveats, and actionable next step before optional detail.
