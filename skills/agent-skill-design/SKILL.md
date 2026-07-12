@@ -1,233 +1,176 @@
 ---
 name: agent-skill-design
-description: Use when designing, reviewing, or refining Agent Skills, converting workflows or guidance into Skills, deciding whether content belongs in a Skill/tool/docs/policy/memory, or tightening vague, broad, unsafe, or hard-to-invoke Skills so they become reusable, selectable, safe, evaluable, and behavior-changing. Do not use as a substitute for platform-specific packaging, manifest, or authoring-spec rules.
+description: "Design, review, or refine the behavioral substance of Agent Skills: decide whether a repeated task belongs in a Skill, define its responsibility, invocation and non-invocation conditions, degree of freedom, tool and resource boundaries, failure handling, and evaluation cases. Use when turning workflows or guidance into a Skill design or correcting a Skill that is vague, broad, unsafe, hard to invoke, or difficult to evaluate. Do not use for platform-specific packaging, manifests, file templates, installation, or authoring-spec compliance."
 ---
 
 # Agent Skill Design
 
 ## Purpose
 
-Use this skill to design, review, and refine Agent Skills as practical operational capabilities for AI agents.
+Design Agent Skills as selectable behavior modules for recurring task classes.
 
-A good Skill is not a knowledge dump, essay, checklist, or prompt trick. It should help an agent perform a repeated class of tasks with better accuracy, consistency, safety, and efficiency.
+Focus on what the agent should do differently, when that behavior should apply, where its responsibility ends, and how to tell whether it helped. Defer packaging, file layout, metadata syntax, templates, installation, and platform-specific validation to the applicable authoring skill or specification.
 
-This skill focuses on Skill substance and quality. Defer packaging details, file layout, frontmatter conventions, and platform-specific templates to the relevant authoring specification or environment-specific guidance.
+## Core Criterion
 
-## Use When
+Create or retain a Skill only when it improves observable agent behavior for a recognizable, recurring task class.
 
-Use this skill when asked to:
+Do not use a Skill merely to preserve information, repeat universal rules, or restate behavior the model already performs reliably. Require a concrete answer to all of these questions:
 
-- create a new Agent Skill
-- review or refine an existing Agent Skill
-- turn a report, workflow, guideline, practice, or project convention into a Skill
-- decide whether content belongs in a Skill, tool, documentation, policy, memory, or general instruction
-- reduce a Skill that is too broad, vague, heavy, unsafe, or hard to invoke
+- What recurring task does the Skill improve?
+- What observed or credible failure does it prevent?
+- What should the agent do differently because the Skill exists?
+- When should and should not that behavior activate?
+- What evidence would show an improvement over the current baseline?
 
-Do not use this skill as a substitute for platform-specific authoring rules.
+If the behavioral difference or evidence cannot be stated, gather examples or keep the content outside a Skill until the need is clearer.
 
-## Core Rule
+## Design Procedure
 
-A Skill is useful only if it changes the agent's behavior for a repeated task class.
+### 1. Establish Evidence And Baseline
 
-Before creating or editing a Skill, answer:
+Start from representative tasks, artifacts, feedback, traces, or observed failures. Distinguish observed problems from hypotheses.
 
-- What repeated task does this Skill improve?
-- When should the agent invoke it?
-- When should the agent not invoke it?
-- What recurring failure does it prevent?
-- What should the agent do differently because this Skill exists?
-- What tools, files, references, or resources matter?
-- What are the boundaries, approvals, or stop conditions?
-- How can success or failure be checked?
+Record:
 
-If these questions cannot be answered, the content is probably not ready to become a Skill.
+- representative requests that expose the need
+- how the agent behaves without the Skill
+- the failure, waste, risk, or inconsistency to reduce
+- the observable behavior or outcome that should improve
+- constraints that must remain unchanged
 
-## First Decide: Skill Or Something Else
+Do not design from generic virtues such as accuracy, safety, or helpfulness alone. Translate them into task-specific decisions and checks.
 
-Do not turn every useful idea into a Skill. Choose the right home for the content.
+### 2. Choose The Responsible Mechanism
 
-| Put it in                | When                                                                                                        |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Skill                    | It guides repeated agent behavior for a recognizable task class.                                            |
-| Tool                     | It requires deterministic execution, external side effects, structured API access, or reliable computation. |
-| Documentation            | It mainly preserves background knowledge, explanations, decisions, or reference material.                   |
-| Policy                   | It defines non-negotiable safety, compliance, privacy, or permission rules.                                 |
-| General instruction      | It applies across almost all tasks and should not depend on invocation.                                     |
-| Memory                   | It is user-specific, project-specific, or preference-like context that should persist across tasks.         |
-| Example or resource file | It is useful supporting material but too long or situational for the main Skill body.                       |
+Place each concern in the mechanism that can own it reliably.
 
-Prefer documentation over a Skill when the content explains but does not change action.
+| Mechanism           | Use when                                                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Skill               | Conditional guidance should change model behavior for a recurring, recognizable task class.                 |
+| Tool or script      | Execution, computation, validation, or side effects should be deterministic and repeatable.                 |
+| Documentation       | The content mainly preserves explanations, background, decisions, or reference knowledge.                   |
+| Policy              | A rule must apply regardless of whether a Skill is invoked.                                                 |
+| General instruction | Behavior applies across most tasks and should always remain in context.                                     |
+| Memory              | User-specific or project-specific context should persist across tasks.                                      |
+| Authoring guidance  | The concern is packaging, metadata syntax, file layout, templates, installation, or platform compatibility. |
 
-Prefer a tool over a Skill when reliable behavior requires deterministic execution rather than model judgment.
+Prefer the simpler owner. Use a Skill to coordinate other mechanisms only when model judgment is necessary to select or sequence them.
 
-Prefer policy over a Skill when the rule must apply regardless of task context.
+### 3. Bound The Responsibility And Invocation
 
-## Skill Design Workflow
+Define one coherent task class: narrow enough to recognize, broad enough to recur.
 
-### 1. Identify The Repeated Task Class
+Specify:
 
-State the kind of task the Skill improves.
+- the task state or user intent that should invoke the Skill
+- positive examples that should invoke it
+- nearby negative examples that should not
+- adjacent responsibilities delegated elsewhere
+- the completion, handoff, and stop conditions
 
-Good task classes are specific enough to invoke, but broad enough to recur.
+Treat the Skill description or equivalent discovery metadata as an invocation interface. Make the task class and trigger recognizable before the body is loaded. Do not rely on domain expertise or instructions hidden in the body to repair vague discovery metadata.
 
-Weak:
+Split a design only when responsibility, trigger, tools, permissions, safety boundary, output contract, or evaluation criteria materially differ. Do not split merely to make files smaller.
 
-> Help with engineering.
+### 4. Define The Behavioral Contract
 
-Strong:
+State the outcome, relevant context, hard constraints, required evidence, success criteria, and output contract. Prescribe intermediate steps only when they prevent a known failure.
 
-> Review an Agent Skill draft for trigger clarity, bounded responsibility, operational procedure, safety constraints, and evaluation criteria.
+Match instruction strength to task shape:
 
-### 2. Name The Failure Modes
+- **High freedom:** Give goals, decision criteria, and constraints when multiple approaches are valid and context should guide judgment.
+- **Medium freedom:** Give a preferred sequence, checkpoints, or parameterized method when consistency matters but variation remains useful.
+- **Low freedom:** Require an exact sequence or deterministic tool when the task is fragile, order-dependent, destructive, or difficult to recover.
 
-Start from concrete failures the Skill should prevent.
+Prefer decision rules, procedures, checks, and failure handling over background explanation. Keep examples only when they encode a real requirement, clarify a decision boundary, or correct a measured failure.
 
-Common Skill-worthy failures include:
+### 5. Design Interfaces And Boundaries
 
-- the agent chooses the wrong tool or uses it incorrectly
-- the agent skips verification
-- the agent asks unnecessary questions
-- the agent misses necessary clarification
-- the agent uses stale, unsupported, or hallucinated knowledge
-- the agent over-expands the task and wastes context
-- the agent performs unsafe or irreversible actions without approval
-- the agent cannot explain, audit, or evaluate its work
-- the agent repeats a known mistake after feedback
+Introduce tools, scripts, references, or other Skills only for a current behavioral need. For each dependency, define what the agent must know:
 
-If no recurring failure can be named, do not create a Skill yet.
+- when to use it and when direct judgment is required
+- required inputs and expected outputs
+- relevant error behavior and missing-result handling
+- side effects, approval needs, and ownership boundaries
+- retry, concurrency, idempotency, and stopping limits when relevant
+- the handoff back to model judgment or another mechanism
 
-### 3. Define The Trigger And Non-Trigger
+Prefer deterministic execution for predictable processing and validation. Retain model judgment where results change the next decision, ambiguity is semantic, approval is required, or final evidence must be assessed.
 
-Make invocation conditions explicit.
+Separate Skill-specific boundaries from global safeguards. Delegate universal permission, privacy, security, and approval rules to policy or general instructions. Include only the additional boundary created by this task class, and rely on constrained tools or deterministic enforcement for high-risk actions where available.
 
-A Skill should say both:
+### 6. Design Evaluation Before Drafting
 
-- when to use it
-- when not to use it
+Define a small representative evaluation set before optimizing wording.
 
-The trigger should be recognizable from the user's request, task state, files, or tool requirements.
+| Case               | Check                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------- |
+| Positive trigger   | The Skill is selected for requests inside its task class.                             |
+| Negative trigger   | Similar but out-of-scope requests do not select it.                                   |
+| Normal behavior    | The intended decisions, checks, evidence, and outcome occur.                          |
+| Failure or absence | Missing inputs, unavailable resources, tool failures, and uncertainty remain visible. |
+| Boundary           | Approval, stop, delegation, and responsibility limits are respected.                  |
+| Regression         | The revised Skill improves or preserves results against the prior baseline.           |
 
-If the Skill format includes a `description` field or similar metadata, treat it as part of the invocation interface. It should state the task class, trigger condition, and intended behavioral improvement clearly enough for the agent to decide whether to read or invoke the Skill. Do not rely on the main body to compensate for a vague, over-broad, or misleading description.
+Evaluate the final outcome as well as the execution path. A correct intermediate result is insufficient if the final response omits required evidence, caveats, decisions, or artifacts.
 
-Avoid hidden triggers that only work if the agent already understands the domain deeply.
+Use the strongest practical evidence available: deterministic assertions where possible, realistic task runs where judgment matters, and human review for qualitative requirements. Compare quality, completeness, corrections, resource use, and failure behavior only to the degree relevant to the Skill.
 
-### 4. Write Operational Guidance
+### 7. Compress And Delegate
 
-Write instructions that change behavior.
+State each rule once. Remove repeated rationale, generic advice, motivational language, and examples that do not change execution.
 
-Prefer:
+Keep the always-needed behavioral core in the Skill body. Delegate detailed reference knowledge, variants, implementation examples, and platform-specific instructions to resources or the mechanism that owns them. Preserve explicit routing so the agent knows when delegated material matters.
 
-- decision rules
-- ordered procedures
-- verification checks
-- tool-use rules
-- stop conditions
-- safety boundaries
-- output contracts
-- failure handling
+Remove instructions or tools one coherent group at a time and rerun the same representative evaluations. Count lower token use, latency, or tool calls as an improvement only when required behavior remains intact.
 
-Avoid:
+## Review Rubric
 
-- generic advice
-- long background explanations
-- motivational language
-- duplicated authoring specs
-- examples that do not affect execution
+Accept a Skill design only when it has:
 
-When converting a report or guideline into a Skill, do not mirror the source structure. Extract only the claims, decisions, risks, procedures, and checks that should change agent behavior.
+- a recurring and recognizable task class
+- evidence or a credible failure hypothesis grounded in examples
+- a behavioral difference from the no-Skill baseline
+- precise invocation and non-invocation conditions
+- one bounded responsibility with explicit delegation
+- instruction strength matched to task fragility
+- outcome, constraints, evidence, success, and output expectations where relevant
+- dependency contracts and failure handling proportionate to actual tool or resource use
+- task-specific boundaries without duplicating global policy
+- representative positive, negative, failure, boundary, and regression checks
+- no content that belongs only to an authoring specification or platform adapter
+- no instruction, example, or dependency that lacks behavioral value
 
-### 5. Add Boundaries And Checks
+Revise the smallest responsible part when a design fails the rubric.
 
-A Skill should define where the agent must slow down, ask, verify, or stop.
+## Refinement Decisions
 
-Include boundaries for:
+Classify the observed problem before editing.
 
-- destructive or irreversible actions
-- private, sensitive, or secret data
-- external content and untrusted instructions
-- user approval requirements
-- tool failures or missing resources
-- uncertainty that affects safety or correctness
-- handoff to another Skill, tool, policy, or documentation
+| Problem                 | Preferred response                                                                             |
+| ----------------------- | ---------------------------------------------------------------------------------------------- |
+| No demonstrated need    | Gather representative failures or keep the content outside a Skill.                            |
+| Wrong mechanism         | Move the concern to a tool, documentation, policy, instruction, memory, or authoring guidance. |
+| Unclear invocation      | Tighten discovery metadata and add positive and negative trigger cases.                        |
+| Too broad               | Narrow the task class or split along a material responsibility boundary.                       |
+| Too vague               | Replace generic advice with decisions, procedures, evidence, and checks.                       |
+| Too prescriptive        | Preserve hard constraints but restore judgment where multiple approaches are valid.            |
+| Tool or resource misuse | Define routing, contracts, side effects, failure handling, and handoffs.                       |
+| Unsafe autonomy         | Isolate the task-specific boundary and delegate enforceable safeguards appropriately.          |
+| Poor evaluation         | Add representative behavior and trigger cases tied to the baseline.                            |
+| Too heavy               | Remove repetition and conditionally route non-core material.                                   |
 
-High-risk behavior should rely on explicit approval, constrained tools, or deterministic checks rather than broad model judgment.
-
-### 6. Compress
-
-After drafting, remove anything that does not help invocation, execution, safety, or evaluation.
-
-Keep the main Skill body focused on what the agent needs during execution. Move long examples, templates, source notes, research background, and supporting references into separate resources when possible.
-
-## Quality Gates
-
-A Skill is not ready for practical use unless it has:
-
-- a clear repeated task class
-- a clear invocation trigger
-- a description that supports accurate invocation before the main body is read
-- clear non-trigger conditions or boundaries
-- concrete behavior-changing instructions
-- bounded responsibility
-- relevant tools, files, or resources identified when needed
-- handling for missing, failed, or unsafe tool/resource use
-- explicit safety, approval, and stop conditions where relevant
-- observable success and failure checks
-- minimal background material in the main body
-- no unnecessary duplication of authoring specs, platform rules, policies, or general instructions
-
-If a Skill fails one of these gates, revise the smallest responsible part.
-
-## Refinement Rules
-
-When refining an existing Skill, preserve its core responsibility unless the user explicitly asks for a redesign.
-
-Before editing, classify the problem:
-
-| Problem          | Preferred fix                                                                   |
-| ---------------- | ------------------------------------------------------------------------------- |
-| Unclear trigger  | Rewrite the description and Use When section.                                   |
-| Too broad        | Narrow the task class or split by responsibility.                               |
-| Too vague        | Replace advice with procedures, decision rules, and checks.                     |
-| Too long         | Move background, examples, and references out of the main body.                 |
-| Tool misuse      | Clarify tool choice, required inputs, failure handling, and side effects.       |
-| Unsafe autonomy  | Add approval rules, stop conditions, and deterministic checks.                  |
-| Poor evaluation  | Add observable quality gates or realistic failure cases.                        |
-| Repeated overlap | Delegate to another Skill, tool, policy, documentation, or general instruction. |
-
-Fix the smallest responsible part. Do not inflate a Skill to cover every adjacent case.
-
-Split a Skill only when one of these meaningfully differs:
-
-- responsibility
-- invocation trigger
-- tool surface
-- permissions or approval rules
-- safety boundary
-- output type
-- evaluation criteria
-
-Do not encode taste as law. Preferences, examples, and one-off judgments should become rules only when they prevent repeated failures.
-
-## Anti-Patterns
-
-Avoid these patterns:
-
-- **Knowledge dump:** stores information but does not guide action.
-- **Generic virtue list:** says to be accurate, safe, concise, or helpful without task-specific behavior.
-- **Hidden trigger:** useful only if the agent already knows when to invoke it.
-- **Over-broad mega-skill:** tries to govern too many unrelated behaviors.
-- **Tool-blind instruction:** says what to achieve but not how to use required tools or resources.
-- **No stop condition:** lets the agent continue when it should ask, verify, escalate, or stop.
-- **No evaluation check:** gives no way to tell whether the Skill improved behavior.
-- **Spec duplication:** repeats packaging, template, or platform rules owned by the relevant authoring specification.
+Preserve the Skill's core responsibility unless the user requests a redesign or the evidence shows that the current boundary is the problem. Do not encode taste, one-off judgments, or speculative extension points as mandatory behavior.
 
 ## Output Contract
 
-When asked to create or refine a Skill, provide:
+For a design or review request, provide:
 
-1. a brief diagnosis of the intended task class and failure modes
-2. the proposed Skill content
-3. notes on what was intentionally delegated to authoring specs, tools, documentation, policy, memory, general instructions, or other Skills
-4. remaining risks, unresolved boundaries, or evaluation gaps
+1. the intended task class, baseline, and failure modes
+2. the proposed responsibility, invocation boundary, and behavioral contract
+3. dependencies, task-specific boundaries, and delegated concerns
+4. representative evaluation cases and success criteria
+5. remaining assumptions, risks, or evidence gaps
 
-Prefer a practical draft that can be tested over a perfect framework that only explains principles.
+When authoring or editing is also requested, pass this design to the applicable authoring skill or specification. Do not duplicate its packaging rules, templates, or platform-specific validation.
