@@ -86,7 +86,7 @@ Use these when context should survive beyond the current conversation or stay tr
 Use these when ideas, plans, or reusable practices need to become implementation-ready artifacts.
 
 - `to-issues`: Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.
-- `agent-skill-design`: Design, review, and refine reusable Agent Skills with clear triggers and evaluation checks.
+- `agent-skill-design`: Design and review Agent Skill responsibilities, invocation boundaries, behavioral contracts, and evaluation criteria before platform-specific authoring.
 
 ## Supported agent harnesses
 

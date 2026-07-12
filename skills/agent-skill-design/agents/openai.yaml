@@ -1,4 +1,4 @@
 interface:
   display_name: "Agent Skill Design"
-  short_description: "Design and review reusable agent skills"
-  default_prompt: "Review this skill draft for trigger clarity, boundaries, operational guidance, and evaluation checks with"
+  short_description: "Design behaviorally effective, evaluable Agent Skills"
+  default_prompt: "Define this Skill's responsibility, invocation boundary, behavioral contract, and evaluation cases with"
