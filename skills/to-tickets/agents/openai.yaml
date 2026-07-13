@@ -1,0 +1,4 @@
+interface:
+  display_name: "To Tickets"
+  short_description: "Draft tracker-neutral implementation tickets"
+  default_prompt: "Turn this plan, spec, or backlog idea into small implementation ticket drafts using"

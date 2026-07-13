@@ -11,7 +11,7 @@ The goal is not to replace project conventions, language expertise, or the agent
 Velkross packages three layers of reusable agent guidance:
 
 - **A baseline engineering stance** through Mergeability-first Engineering.
-- **On-demand workflows** through bundled skills for planning, implementation, review, documentation, memory, and issue drafting.
+- **On-demand workflows** through bundled skills for planning, implementation, review, documentation, memory, and ticket drafting.
 - **Harness adapters** that deliver the same core behavior through Codex, Claude Code, Cursor, and similar agent environments.
 
 ## Why mergeability
@@ -30,7 +30,7 @@ Mergeability-first Engineering is the always-on guidance bundled with Velkross. 
 
 ### Workflow skills
 
-Skills make the baseline actionable in specific situations. Use them when the agent needs a focused workflow for clarifying scope, pressure-testing a plan, designing a boundary, reducing complexity, practicing TDD, preserving project context, maintaining docs, or turning ideas into implementation issues.
+Skills make the baseline actionable in specific situations. Use them when the agent needs a focused workflow for clarifying scope, pressure-testing a plan, designing a boundary, reducing complexity, practicing TDD, preserving project context, maintaining docs, or turning ideas into implementation tickets.
 
 ### Harness adapters
 
@@ -85,7 +85,7 @@ Use these when context should survive beyond the current conversation or stay tr
 
 Use these when ideas, plans, or reusable practices need to become implementation-ready artifacts.
 
-- `to-issues`: Turn plans, specs, or backlog ideas into small, verifiable implementation issue drafts.
+- `to-tickets`: Turn plans, specs, or backlog ideas into small, verifiable implementation ticket drafts for tracker or file-based workflows.
 - `agent-skill-design`: Design and review Agent Skill responsibilities, invocation boundaries, behavioral contracts, and evaluation criteria before platform-specific authoring.
 
 ## Supported agent harnesses
