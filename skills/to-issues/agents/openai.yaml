@@ -1,4 +1,0 @@
-interface:
-  display_name: "To Issues"
-  short_description: "Draft small implementation issues"
-  default_prompt: "Turn this plan, spec, or backlog idea into small implementation issue drafts using"
