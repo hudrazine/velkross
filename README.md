@@ -44,7 +44,6 @@ When your harness supports direct skill or plugin invocation, you can also call 
 
 ```text
 Use Velkross while implementing this change.
-Use clarify-or-proceed to help choose the next step.
 Use alignment-interview to interview me until we share the same understanding.
 Review this diff for unnecessary complexity.
 Use TDD for this behavior change.
@@ -56,9 +55,8 @@ Velkross skills are on-demand workflows that make Mergeability-first Engineering
 
 ### Decide and align
 
-Use these when the task is still ambiguous, risky, or shaped by unresolved tradeoffs.
+Use this when shared understanding should be established before acting.
 
-- `clarify-or-proceed`: Decide whether to ask, assume, investigate, compare options, or proceed.
 - `alignment-interview`: Elicit and organize context, resolve decisions, and confirm shared understanding one question at a time.
 
 ### Build and verify
