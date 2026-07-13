@@ -1,4 +1,0 @@
-interface:
-  display_name: "Clarify or Proceed"
-  short_description: "Decide whether to ask, assume, investigate, or proceed"
-  default_prompt: "Decide whether to clarify, investigate, compare options, or proceed using"
