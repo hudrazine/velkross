@@ -30,7 +30,7 @@ Mergeability-first Engineering is the always-on guidance bundled with Velkross. 
 
 ### Workflow skills
 
-Skills make the baseline actionable in specific situations. Use them when the agent needs a focused workflow for clarifying scope, pressure-testing a plan, designing a boundary, reducing complexity, practicing TDD, preserving project context, maintaining docs, or turning ideas into implementation tickets.
+Skills make the baseline actionable in specific situations. Use them when the agent needs a focused workflow for clarifying scope, building shared understanding, designing a boundary, reducing complexity, practicing TDD, preserving project context, maintaining docs, or turning ideas into implementation tickets.
 
 ### Harness adapters
 
@@ -45,7 +45,7 @@ When your harness supports direct skill or plugin invocation, you can also call 
 ```text
 Use Velkross while implementing this change.
 Use clarify-or-proceed to help choose the next step.
-Pressure-test this plan before implementation.
+Use alignment-interview to interview me until we share the same understanding.
 Review this diff for unnecessary complexity.
 Use TDD for this behavior change.
 ```
@@ -59,7 +59,7 @@ Velkross skills are on-demand workflows that make Mergeability-first Engineering
 Use these when the task is still ambiguous, risky, or shaped by unresolved tradeoffs.
 
 - `clarify-or-proceed`: Decide whether to ask, assume, investigate, compare options, or proceed.
-- `pressure-test`: Test key assumptions, tradeoffs, and AI-user alignment before implementation.
+- `alignment-interview`: Elicit and organize context, resolve decisions, and confirm shared understanding one question at a time.
 
 ### Build and verify
 
