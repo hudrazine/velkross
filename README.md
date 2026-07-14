@@ -105,7 +105,7 @@ Install Velkross as a plugin for your agent harness, then start a new session or
 Add the Velkross marketplace, then install Velkross from the Codex plugin browser.
 
 ```bash
-codex plugin marketplace add hudrazine/velkross
+codex plugin marketplace add hudrazine/velkross --ref v0.3.0
 codex
 ```
 
@@ -118,7 +118,7 @@ Velkross includes Codex hooks. If Codex warns that hooks need review, open the h
 Add the Velkross marketplace, install the plugin, then reload plugins in the active Claude Code session.
 
 ```bash
-claude plugin marketplace add hudrazine/velkross
+claude plugin marketplace add hudrazine/velkross@v0.3.0
 claude plugin install velkross@velkross
 ```
 
@@ -136,22 +136,23 @@ macOS/Linux:
 
 ```bash
 mkdir -p ~/.cursor/plugins/local
-git clone https://github.com/hudrazine/velkross.git ~/.cursor/plugins/local/velkross
+git clone --branch v0.3.0 https://github.com/hudrazine/velkross.git ~/.cursor/plugins/local/velkross
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.cursor\plugins\local"
-git clone https://github.com/hudrazine/velkross.git "$env:USERPROFILE\.cursor\plugins\local\velkross"
+git clone --branch v0.3.0 https://github.com/hudrazine/velkross.git "$env:USERPROFILE\.cursor\plugins\local\velkross"
 ```
 
 Restart Cursor or run **Developer: Reload Window** so the bundled rules and skills are loaded.
 
-To update a local Cursor installation:
+To switch a local Cursor installation to another release, fetch the tags and check out the desired version:
 
 ```bash
-git -C ~/.cursor/plugins/local/velkross pull
+git -C ~/.cursor/plugins/local/velkross fetch --tags
+git -C ~/.cursor/plugins/local/velkross checkout vX.Y.Z
 ```
 
 <details>
