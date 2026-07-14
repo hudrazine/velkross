@@ -77,7 +77,7 @@ Use these when the shape of the code matters as much as the immediate behavior.
 Use these when context should survive beyond the current conversation or stay trustworthy in repository docs.
 
 - `agent-memory`: Save, recall, and organize repo-local project context across conversations.
-- `manage-project-docs`: Maintain repository docs, including docs/README.md as the project-doc router.
+- `project-development-docs`: Search, read, and maintain repository-local development documentation under `.dev-docs/`.
 
 ### Turn work into artifacts
 

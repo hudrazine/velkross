@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Development Docs"
+  short_description: "Search and maintain repository development docs"
+  default_prompt: "Find and maintain only the repository development documents affected by my request using"
