@@ -1,7 +1,7 @@
 {
   "name": "velkross",
   "version": "0.3.0",
-  "description": "Mergeability-first guidance and reusable skills for scoped, durable, verifiable code changes.",
+  "description": "Trust-preserving guidance and reusable skills for scoped, durable, verifiable software changes.",
   "author": {
     "name": "Hudrazine",
     "url": "https://github.com/hudrazine"
@@ -9,19 +9,19 @@
   "homepage": "https://github.com/hudrazine/velkross",
   "repository": "https://github.com/hudrazine/velkross",
   "license": "MIT",
-  "keywords": ["mergeability", "engineering", "skills", "hooks", "coding-agents"],
+  "keywords": ["trust-preserving", "software-evolution", "skills", "hooks", "coding-agents"],
   "skills": "./skills/",
   "hooks": "./hooks/codex-hooks.json",
   "interface": {
     "displayName": "Velkross",
-    "shortDescription": "Keep Codex changes scoped, durable, and ready to merge.",
-    "longDescription": "Velkross combines always-on Mergeability-first Engineering guidance with reusable skills to help Codex make focused changes that fit the existing design, preserve relevant contracts, and verify behavior in proportion to risk.",
+    "shortDescription": "Keep Codex changes scoped, durable, and trustworthy.",
+    "longDescription": "Velkross combines always-on Trust-Preserving Software Evolution guidance with reusable skills to help Codex make focused changes that preserve supported contracts, contain failure, fit the existing design, and verify behavior in proportion to risk.",
     "developerName": "Hudrazine",
     "category": "Productivity",
     "capabilities": ["Hooks", "Skills"],
     "defaultPrompt": [
       "Use Velkross while implementing this change.",
-      "Review this diff with Velkross mergeability guidance.",
+      "Review this diff using Velkross's engineering guidance.",
       "Help me choose the smallest durable next step."
     ]
   }

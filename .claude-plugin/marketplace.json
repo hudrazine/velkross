@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "velkross",
-  "description": "Mergeability-first guidance and reusable skills for scoped, durable, verifiable code changes.",
+  "description": "Trust-preserving guidance and reusable skills for scoped, durable, verifiable software changes.",
   "owner": {
     "name": "Hudrazine"
   },
@@ -10,7 +10,7 @@
       "name": "velkross",
       "displayName": "Velkross",
       "source": "./",
-      "description": "Mergeability-first guidance and reusable skills for scoped, durable, verifiable code changes.",
+      "description": "Trust-preserving guidance and reusable skills for scoped, durable, verifiable software changes.",
       "author": {
         "name": "Hudrazine"
       },

@@ -1,7 +1,7 @@
 {
   "name": "velkross",
   "version": "0.3.0",
-  "description": "Mergeability-first guidance and reusable skills for scoped, durable, verifiable code changes.",
+  "description": "Trust-preserving guidance and reusable skills for scoped, durable, verifiable software changes.",
   "author": {
     "name": "Hudrazine"
   },

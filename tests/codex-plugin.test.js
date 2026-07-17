@@ -8,10 +8,10 @@ function readJson(path) {
 
 const codexHookCommand = {
   type: "command",
-  command: "node ${PLUGIN_ROOT}/hooks/mergeability-context.js --harness codex",
+  command: "node ${PLUGIN_ROOT}/hooks/velkross-context.js --harness codex",
   commandWindows:
-    "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/mergeability-context.js') --harness codex\"",
-  statusMessage: "Loading mergeability context",
+    "pwsh -NoProfile -Command \"node (Join-Path $env:PLUGIN_ROOT 'hooks/velkross-context.js') --harness codex\"",
+  statusMessage: "Loading Velkross guidance",
 };
 
 test("declares Codex plugin entrypoints", () => {

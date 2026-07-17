@@ -1,32 +1,32 @@
 # Velkross
 
-Language-agnostic mergeability-first engineering for AI coding agents.
+Language-agnostic trust-preserving software evolution for AI coding agents.
 
-Velkross is a plugin for AI coding agent harnesses such as Codex, Claude Code, and Cursor. It gives agents a stable engineering stance centered on mergeability: changes should be scoped, understandable, aligned with the existing codebase, and practically verifiable.
+Velkross is a plugin for AI coding agent harnesses such as Codex, Claude Code, and Cursor. It gives agents a stable engineering stance centered on preserving justified trust while software changes: supported contracts should remain dependable, success and failure should stay semantically correct, effects should be contained and recoverable, and behavioral claims should be practically verifiable.
 
-The goal is not to replace project conventions, language expertise, or the agent's general coding ability. Velkross adds a review-oriented bias on top of them so the agent keeps asking the engineering question that matters during collaboration: is this change ready to review and merge?
+The goal is not to replace project conventions, language expertise, or the agent's general coding ability. Velkross adds a shared center of engineering judgment so the agent keeps asking the question that matters as a system evolves: does this change achieve the required outcome while preserving or strengthening the grounds for trust in the software?
 
 ## What Velkross is
 
 Velkross packages three layers of reusable agent guidance:
 
-- **A baseline engineering stance** through Mergeability-first Engineering.
+- **A baseline engineering stance** through Trust-Preserving Software Evolution.
 - **On-demand workflows** through bundled skills for planning, implementation, review, documentation, memory, and ticket drafting.
 - **Harness adapters** that deliver the same core behavior through Codex, Claude Code, Cursor, and similar agent environments.
 
-## Why mergeability
+## Why trust-preserving evolution
 
-Modern AI coding agents are flexible enough to work across many languages, frameworks, and project styles. That flexibility is useful, but it can also make implementation judgment drift toward changes that are too broad, too clever, weakly verified, or misaligned with the surrounding codebase.
+Modern AI coding agents are flexible enough to work across many languages, frameworks, and project styles. That flexibility is useful, but it can also make implementation judgment drift toward changes that are too broad, too clever, weakly verified, or disconnected from the contracts and conceptual model of the surrounding system.
 
-Mergeability-first Engineering keeps the agent oriented around the review boundary. A useful change should not merely appear to work. It should preserve the relevant contracts, fit the local architecture, respect error and data semantics, remain understandable to a maintainer, and leave behind proportionate verification when behavior changes.
+Trust-Preserving Software Evolution keeps the agent oriented around the system qualities that make change safe to depend on. A sound change should not merely appear to work. It should preserve supported contracts not required to change, remain correct in success and failure, fit the system's responsibilities and vocabulary, contain uncertainty and failure, and leave behind evidence capable of revealing when its behavioral claims are false.
 
-This is not a replacement for generic software principles. Velkross assumes modern agents already know many common programming patterns. Its job is to keep the agent's choices grounded in the practical standard a human reviewer eventually applies: can this be safely reviewed, maintained, and merged?
+Trust preservation is not status-quo preservation. Existing behavior may be a supported contract, a material dependency, an incidental implementation detail, or a defect. Velkross helps the agent distinguish them and make the smallest complete change at the boundary that owns the behavior, with rigor proportionate to impact and uncertainty.
 
 ## How it works
 
-### Baseline guidance
+### Baseline engineering guidance
 
-Mergeability-first Engineering is the always-on guidance bundled with Velkross. It gives agents a steady implementation bias toward changes that preserve maintainability, correctness, type safety where applicable, architectural boundaries, explicit contracts, and practical testability.
+Trust-Preserving Software Evolution is the always-on guidance bundled with Velkross. It establishes decision boundaries and priorities around supported contracts, semantic correctness, valid state, conceptual coherence, contained failure, recoverability, and falsifiable evidence without redefining the task or expanding the agent's authority.
 
 ### Workflow skills
 
@@ -38,7 +38,7 @@ Velkross ships harness-specific adapters so the same engineering guidance can be
 
 ## Usage
 
-Once installed, Velkross should apply its mergeability guidance through the host harness lifecycle. In normal coding sessions, you can ask your agent to implement, review, debug, or refactor as usual; Velkross adds the shared engineering judgment in the background.
+Once installed, Velkross should apply its baseline engineering guidance through the host harness lifecycle. In normal coding sessions, you can ask your agent to implement, review, debug, or refactor as usual; Velkross adds the shared engineering judgment in the background.
 
 When your harness supports direct skill or plugin invocation, you can also call a bundled workflow explicitly:
 
@@ -51,7 +51,7 @@ Use TDD for this behavior change.
 
 ## Skills
 
-Velkross skills are on-demand workflows that make Mergeability-first Engineering actionable in specific moments of software development.
+Velkross skills are on-demand workflows that complement Trust-Preserving Software Evolution in specific moments of software development.
 
 ### Decide and align
 
@@ -218,7 +218,7 @@ Remove-Item -Recurse -Force "$env:USERPROFILE\.cursor\plugins\local\velkross"
 
 Velkross is meant to make AI-assisted engineering easier to maintain over time. Instead of relying only on ad hoc prompts, it packages reusable guidance and workflows into harness plugins that can be installed, shared, reviewed, and evolved like the rest of a development toolchain.
 
-The goal is not to make agents more verbose or more rigid. The goal is to give them a consistent bias toward changes that a human maintainer would actually want to review and merge.
+The goal is not to make agents more verbose or more rigid. The goal is to give them a consistent bias toward software changes whose contracts, correctness, effects, recovery paths, and evidence remain worthy of justified trust.
 
 ## License
 

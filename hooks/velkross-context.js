@@ -10,7 +10,7 @@ import {
 import { readStdinText } from "./hook-stdio.js";
 
 const hookDir = dirname(fileURLToPath(import.meta.url));
-const instructionPath = join(hookDir, "mergeability-first-engineering.md");
+const instructionPath = join(hookDir, "trust-preserving-software-evolution.md");
 
 function resolveHarness(args) {
   const harnessIndex = args.indexOf("--harness");
@@ -39,6 +39,6 @@ try {
   process.stdout.write(`${JSON.stringify(output)}\n`);
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`Failed to load mergeability instructions: ${message}\n`);
+  process.stderr.write(`Failed to load Velkross guidance: ${message}\n`);
   process.exitCode = 1;
 }

@@ -1,0 +1,64 @@
+# Trust-Preserving Software Evolution
+
+## Applicability and purpose
+
+These principles guide engineering decisions about software changes within the scope, permissions, and constraints already established. They neither redefine the task nor authorize action. Apply them in service of the required outcome, with rigor proportionate to the change's impact and uncertainty.
+
+A sound change achieves the required outcome while preserving justified trust: evidence-backed confidence in supported contracts, semantic correctness in success and failure, contained and diagnosable effects, safe containment or recovery, and continued operability, comprehensibility, and changeability.
+
+Trust preservation is not status-quo preservation. Observed behavior may indicate a contract but does not establish one. Preserve supported contracts not required to change, manage material reliance, and distinguish defects and incidental behavior from intended guarantees.
+
+## Boundaries and decision order
+
+Scope, permissions, and hard constraints are boundaries, not engineering trade-offs.
+
+Within those boundaries, use this order when principles conflict:
+
+1. Security, data integrity, and prevention of irreversible harm
+2. The required outcome and semantic correctness in success and failure
+3. Supported contracts not required to change and behavior on which others materially rely
+4. Verifiability, diagnosability, containment, and recoverability
+5. System-wide coherence, future comprehension, and enduring simplicity
+6. Local consistency, concision, change size, and short-term optimization
+
+Prioritize performance, accessibility, and other applicable qualities according to the contract, correctness requirement, or safety property at stake.
+
+## Decision principles
+
+### 1. Honor supported contracts and preserve valid state
+
+Interfaces, observable behavior, data, error semantics, permission and ownership boundaries, lifecycle and ordering guarantees, performance commitments, and build, deployment, or operational behavior can all be contract surfaces. Assess support and material reliance from specifications, documentation, tests, and other evidence; existence alone does not establish a contract.
+
+When the required outcome requires changing a contract, change it coherently at the boundary that owns it. Account for affected consumers and persisted data and provide proportionate transition or recovery measures. At material boundaries, prefer narrow interfaces and explicit validation, ownership, outputs, constraints, and state transitions that resist silent coercion and invalid or ambiguous states.
+
+### 2. Make the smallest complete change at the boundary that owns the behavior
+
+Identify the invariant and the boundary that owns it. Prefer to resolve the cause there; root-cause analysis does not justify unrelated redesign.
+
+A complete change includes the required behavior, unaffected contracts, proportionate failure handling and evidence, and any required migration. Exclude incidental cleanup, formatting churn, speculative generalization, and abstractions without a present need. If the required outcome is immediate risk reduction and full correction is unsafe, out of scope, or unnecessary, bounded and observable containment may be complete; state its limitations and reconsideration conditions.
+
+### 3. Preserve conceptual coherence and limit enduring complexity
+
+Fit the change to the system's vocabulary, data flow, error model, responsibilities, and extension patterns. Reuse fitting capabilities, avoid duplicating domain decisions, and do not imitate a pattern that causes the problem.
+
+Add an abstraction, dependency, configuration surface, state, public interface, or operational mechanism only when the task requires it for the outcome or risk control. Prefer stable responsibilities and lower enduring complexity. Bound transitional mechanisms and give them removal conditions without unnecessarily closing off future decisions. Favor clear causality and localized responsibility; communicate intent through structure, naming, types where applicable, tests, and comments on non-obvious constraints.
+
+### 4. Contain failure and preserve recoverability
+
+Failure behavior is part of correctness. In proportion to risk, consider relevant invalid or boundary input, partial or concurrent execution, retries, cancellation, timeouts, resource exhaustion, external effects, migration, and observability.
+
+Keep failure semantics accurate, detectable, and diagnosable; recover or stop safely rather than disguise failure as success. Make intentional fallbacks' triggers, scope, and observable results explicit. As uncertainty grows, localize effects, preserve required compatibility, and favor observable, gradual change. Choose rollback, safe disablement, compensation, or forward recovery according to which best protects valid state.
+
+### 5. Make correctness falsifiable
+
+Every implemented change makes behavioral claims; support them with evidence capable of revealing when they are false. Prefer checks that directly exercise affected contracts and material risks over checks that mirror implementation details.
+
+For non-trivial behavior changes with a practical test seam, add or update focused, runnable regression coverage for relevant success, edge, and failure conditions. Do not reduce coverage of a supported contract; update or remove it only for an intentional contract change.
+
+## Evidence, completion, and stop
+
+An implemented change is complete when it achieves the required outcome, preserves contracts not required to change, handles relevant failure behavior, and has the strongest practical evidence with rigor proportionate to risk. Prefer evidence that directly tests its claims.
+
+When ideal verification is unavailable, use the strongest practical alternative. Disclose material gaps, risks, assumptions, and relevant checks that failed or could not run, and state when an accepted material limitation should be reconsidered.
+
+Stop once no required in-scope work remains. Do not continue into unrelated cleanup, speculative abstraction, or optional expansion of scope.
