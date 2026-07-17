@@ -9,8 +9,8 @@ function readJson(path) {
 const claudeCodeHookCommand = {
   type: "command",
   command: "node",
-  args: ["${CLAUDE_PLUGIN_ROOT}/hooks/mergeability-context.js", "--harness", "claude-code"],
-  statusMessage: "Loading mergeability context",
+  args: ["${CLAUDE_PLUGIN_ROOT}/hooks/velkross-context.js", "--harness", "claude-code"],
+  statusMessage: "Loading Velkross guidance",
 };
 
 test("declares Claude Code plugin entrypoints", () => {
@@ -37,7 +37,7 @@ test("declares Claude Code marketplace entrypoint", () => {
   });
 });
 
-test("declares Claude Code hooks for mergeability context", () => {
+test("declares Claude Code hooks for Velkross guidance", () => {
   expect(readJson("../hooks/claude-hooks.json")).toEqual({
     hooks: {
       SessionStart: [

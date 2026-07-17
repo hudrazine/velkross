@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 import { expect, test } from "vite-plus/test";
 
 const command = process.execPath;
-const scriptPath = fileURLToPath(new URL("../hooks/mergeability-context.js", import.meta.url));
-const instructionPath = new URL("../hooks/mergeability-first-engineering.md", import.meta.url);
+const scriptPath = fileURLToPath(new URL("../hooks/velkross-context.js", import.meta.url));
+const instructionPath = new URL("../hooks/trust-preserving-software-evolution.md", import.meta.url);
 
 function runHook(input, args = []) {
   return spawnSync(command, [scriptPath, ...args], {
@@ -15,7 +15,7 @@ function runHook(input, args = []) {
   });
 }
 
-test("emits mergeability context for empty stdin", () => {
+test("emits Velkross guidance for empty stdin", () => {
   const result = runHook("");
   const expectedContext = readFileSync(instructionPath, "utf8").trim();
 
@@ -36,9 +36,7 @@ test("reports unsupported hook events", () => {
 
   expect(result.status).toBe(1);
   expect(result.stdout).toBe("");
-  expect(result.stderr).toContain(
-    "Failed to load mergeability instructions: Unsupported hook event: Stop",
-  );
+  expect(result.stderr).toContain("Failed to load Velkross guidance: Unsupported hook event: Stop");
 });
 
 test("emits Claude Code hook output when requested", () => {

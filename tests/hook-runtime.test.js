@@ -29,31 +29,31 @@ test("throws for invalid JSON hook input", () => {
   expect(() => resolveHookEventName("{")).toThrow();
 });
 
-test("creates Codex hook output with mergeability context", () => {
+test("creates Codex hook output with Velkross guidance", () => {
   expect(
     createCodexHookOutput({
       hookEventName: "SubagentStart",
-      additionalContext: "Mergeability-first Engineering",
+      additionalContext: "Trust-Preserving Software Evolution",
     }),
   ).toEqual({
     continue: true,
     hookSpecificOutput: {
       hookEventName: "SubagentStart",
-      additionalContext: "Mergeability-first Engineering",
+      additionalContext: "Trust-Preserving Software Evolution",
     },
   });
 });
 
-test("creates Claude Code hook output with mergeability context", () => {
+test("creates Claude Code hook output with Velkross guidance", () => {
   expect(
     createClaudeCodeHookOutput({
       hookEventName: "SubagentStart",
-      additionalContext: "Mergeability-first Engineering",
+      additionalContext: "Trust-Preserving Software Evolution",
     }),
   ).toEqual({
     hookSpecificOutput: {
       hookEventName: "SubagentStart",
-      additionalContext: "Mergeability-first Engineering",
+      additionalContext: "Trust-Preserving Software Evolution",
     },
   });
 });

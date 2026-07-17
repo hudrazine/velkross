@@ -30,14 +30,20 @@ test("does not declare Cursor hooks", () => {
   expect(fileExists("../hooks/hooks.json")).toBe(false);
 });
 
-test("declares an always-applied Cursor rule for mergeability guidance", () => {
-  const rule = readText("../rules/mergeability-first-engineering.mdc");
-  const instruction = readText("../hooks/mergeability-first-engineering.md");
+test("declares an always-applied Cursor rule for Velkross guidance", () => {
+  const rule = readText("../rules/velkross-core-guidance.mdc");
+  const instruction = readText("../hooks/trust-preserving-software-evolution.md");
   const ruleBody = rule.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n+/, "");
 
   expect(rule).toContain(
-    'description: "Mergeability-first Engineering guidance for coding agents"',
+    'description: "Core Trust-Preserving Software Evolution guidance for coding agents"',
   );
   expect(rule).toContain("alwaysApply: true");
   expect(ruleBody.trim()).toBe(instruction.trim());
+});
+
+test("does not include retired Mergeability-first guidance", () => {
+  expect(fileExists("../hooks/mergeability-context.js")).toBe(false);
+  expect(fileExists("../rules/mergeability-first-engineering.mdc")).toBe(false);
+  expect(fileExists("../hooks/mergeability-first-engineering.md")).toBe(false);
 });
