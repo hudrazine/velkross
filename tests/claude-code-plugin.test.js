@@ -15,7 +15,7 @@ const claudeCodeHookCommand = {
 
 test("declares Claude Code plugin entrypoints", () => {
   expect(readJson("../.claude-plugin/plugin.json")).toMatchObject({
-    version: "0.3.0",
+    version: "0.4.0",
     skills: "./skills/",
     hooks: "./hooks/claude-hooks.json",
   });
