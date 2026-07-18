@@ -45,15 +45,13 @@ Do not design from generic virtues such as accuracy, safety, or helpfulness alon
 
 Place each concern in the mechanism that can own it reliably.
 
-| Mechanism           | Use when                                                                                                    |
-| ------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Skill               | Conditional guidance should change model behavior for a recurring, recognizable task class.                 |
-| Tool or script      | Execution, computation, validation, or side effects should be deterministic and repeatable.                 |
-| Documentation       | The content mainly preserves explanations, background, decisions, or reference knowledge.                   |
-| Policy              | A rule must apply regardless of whether a Skill is invoked.                                                 |
-| General instruction | Behavior applies across most tasks and should always remain in context.                                     |
-| Memory              | User-specific or project-specific context should persist across tasks.                                      |
-| Authoring guidance  | The concern is packaging, metadata syntax, file layout, templates, installation, or platform compatibility. |
+- **Skill:** Use when conditional guidance should change model behavior for a recurring, recognizable task class.
+- **Tool or script:** Use when execution, computation, validation, or side effects should be deterministic and repeatable.
+- **Documentation:** Use when the content mainly preserves explanations, background, decisions, or reference knowledge.
+- **Policy:** Use when a rule must apply regardless of whether a Skill is invoked.
+- **General instruction:** Use when behavior applies across most tasks and should always remain in context.
+- **Memory:** Use when user-specific or project-specific context should persist across tasks.
+- **Authoring guidance:** Use when the concern is packaging, metadata syntax, file layout, templates, installation, or platform compatibility.
 
 Prefer the simpler owner. Use a Skill to coordinate other mechanisms only when model judgment is necessary to select or sequence them.
 
@@ -75,13 +73,17 @@ Split a design only when responsibility, trigger, tools, permissions, safety bou
 
 ### 4. Define The Behavioral Contract
 
-State the outcome, relevant context, hard constraints, required evidence, success criteria, and output contract. Prescribe intermediate steps only when they prevent a known failure.
+State the outcome, relevant context, hard constraints, required evidence, success criteria, and output contract. Distinguish hard constraints from decision principles and preferences: constraints cannot be violated, principles resolve tradeoffs, and preferences may yield to justified context. Prescribe intermediate steps only when they prevent a known failure.
 
 Match instruction strength to task shape:
 
-- **High freedom:** Give goals, decision criteria, and constraints when multiple approaches are valid and context should guide judgment.
+- **High freedom:** Define outcomes, evidence, decision principles, and constraints while leaving information gathering, decomposition, comparison, and solution paths open when multiple approaches are valid.
 - **Medium freedom:** Give a preferred sequence, checkpoints, or parameterized method when consistency matters but variation remains useful.
 - **Low freedom:** Require an exact sequence or deterministic tool when the task is fragile, order-dependent, destructive, or difficult to recover.
+
+Define clarification thresholds for ambiguities that materially change the outcome, risk, or supported contract. Allow reasonable, reversible assumptions only where the task-specific boundary permits them, and keep material assumptions visible.
+
+Do not require transcripts of hidden reasoning. Require conclusions, supporting evidence, material assumptions, uncertainty, and verification results when they are needed to evaluate the outcome.
 
 Prefer decision rules, procedures, checks, and failure handling over background explanation. Keep examples only when they encode a real requirement, clarify a decision boundary, or correct a measured failure.
 
@@ -104,14 +106,12 @@ Separate Skill-specific boundaries from global safeguards. Delegate universal pe
 
 Define a small representative evaluation set before optimizing wording.
 
-| Case               | Check                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------- |
-| Positive trigger   | The Skill is selected for requests inside its task class.                             |
-| Negative trigger   | Similar but out-of-scope requests do not select it.                                   |
-| Normal behavior    | The intended decisions, checks, evidence, and outcome occur.                          |
-| Failure or absence | Missing inputs, unavailable resources, tool failures, and uncertainty remain visible. |
-| Boundary           | Approval, stop, delegation, and responsibility limits are respected.                  |
-| Regression         | The revised Skill improves or preserves results against the prior baseline.           |
+- **Positive trigger:** Select the Skill for requests inside its task class.
+- **Negative trigger:** Do not select the Skill for similar but out-of-scope requests.
+- **Normal behavior:** Produce the intended decisions, checks, evidence, and outcome.
+- **Failure or absence:** Keep missing inputs, unavailable resources, tool failures, and uncertainty visible.
+- **Boundary:** Respect approval, stop, delegation, and responsibility limits.
+- **Regression:** Improve or preserve results against the prior baseline.
 
 Evaluate the final outcome as well as the execution path. A correct intermediate result is insufficient if the final response omits required evidence, caveats, decisions, or artifacts.
 
@@ -135,6 +135,7 @@ Accept a Skill design only when it has:
 - precise invocation and non-invocation conditions
 - one bounded responsibility with explicit delegation
 - instruction strength matched to task fragility
+- hard constraints, decision principles, and preferences that are distinguishable, with clarification thresholds proportionate to task risk
 - outcome, constraints, evidence, success, and output expectations where relevant
 - dependency contracts and failure handling proportionate to actual tool or resource use
 - task-specific boundaries without duplicating global policy
@@ -148,18 +149,16 @@ Revise the smallest responsible part when a design fails the rubric.
 
 Classify the observed problem before editing.
 
-| Problem                 | Preferred response                                                                             |
-| ----------------------- | ---------------------------------------------------------------------------------------------- |
-| No demonstrated need    | Gather representative failures or keep the content outside a Skill.                            |
-| Wrong mechanism         | Move the concern to a tool, documentation, policy, instruction, memory, or authoring guidance. |
-| Unclear invocation      | Tighten discovery metadata and add positive and negative trigger cases.                        |
-| Too broad               | Narrow the task class or split along a material responsibility boundary.                       |
-| Too vague               | Replace generic advice with decisions, procedures, evidence, and checks.                       |
-| Too prescriptive        | Preserve hard constraints but restore judgment where multiple approaches are valid.            |
-| Tool or resource misuse | Define routing, contracts, side effects, failure handling, and handoffs.                       |
-| Unsafe autonomy         | Isolate the task-specific boundary and delegate enforceable safeguards appropriately.          |
-| Poor evaluation         | Add representative behavior and trigger cases tied to the baseline.                            |
-| Too heavy               | Remove repetition and conditionally route non-core material.                                   |
+- **No demonstrated need:** Gather representative failures or keep the content outside a Skill.
+- **Wrong mechanism:** Move the concern to a tool, documentation, policy, instruction, memory, or authoring guidance.
+- **Unclear invocation:** Tighten discovery metadata and add positive and negative trigger cases.
+- **Too broad:** Narrow the task class or split along a material responsibility boundary.
+- **Too vague:** Replace generic advice with decisions, procedures, evidence, and checks.
+- **Too prescriptive:** Preserve hard constraints but restore judgment where multiple approaches are valid.
+- **Tool or resource misuse:** Define routing, contracts, side effects, failure handling, and handoffs.
+- **Unsafe autonomy:** Isolate the task-specific boundary and delegate enforceable safeguards appropriately.
+- **Poor evaluation:** Add representative behavior and trigger cases tied to the baseline.
+- **Too heavy:** Remove repetition and conditionally route non-core material.
 
 Preserve the Skill's core responsibility unless the user requests a redesign or the evidence shows that the current boundary is the problem. Do not encode taste, one-off judgments, or speculative extension points as mandatory behavior.
 
