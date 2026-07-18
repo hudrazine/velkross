@@ -95,6 +95,8 @@ node <skill-folder>/scripts/validate-dev-docs.mjs .dev-docs
 
 The validator requires no installed packages and does not modify files. Exit code `0` means no structural errors were found, although non-blocking warnings may still be reported. Exit code `1` means document errors were found, and `2` means the validator could not run correctly. If Node.js is unavailable or the validator cannot run, report the validation gap instead of treating the documents as valid.
 
+Keep symbolic links and junctions out of `.dev-docs/`. The validator does not follow them and reports each entry as a structural error so linked content cannot be silently omitted from validation.
+
 Warnings do not block completion, but review and report them because they may identify retrieval, ownership, or maintenance problems.
 
 The validator checks the supported syntax, required fields, value types, controlled values, dates, reference paths, supersession states, duplicate array entries, duplicate summaries, and consistency between `status: "archived"` and the `archive/` directory.

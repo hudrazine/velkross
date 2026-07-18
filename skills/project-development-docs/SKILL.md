@@ -42,6 +42,8 @@ Do not infer that documentation is absent from a failed summary search alone. Us
 
 When a material current-state claim affects the answer or planned work, verify it against the owning code, tests, types, schemas, scripts, configuration, or CI when practical. Keep unverified documentation claims distinguishable from verified project behavior.
 
+If active documents make conflicting claims, do not choose one from `updated` recency alone. Verify against the owning sources and determine which document owns the topic. If the conflict cannot be resolved within the task, keep it visible and report it as an unresolved documentation gap.
+
 ## Maintain Development Docs
 
 Search existing summaries before creating a document. Update or consolidate an existing canonical document when it already owns the topic.
@@ -50,15 +52,15 @@ For requests limited to reading, reviewing, explaining, searching, or proposing,
 
 Create or change development documents only when the user requests documentation work or when an authorized project change would otherwise leave an existing development document materially incorrect. Do not create new documents merely because they might be useful.
 
+For new or substantially changed content, distinguish current, planned, historical, rejected, and unverified knowledge when relevant. Choose the smallest representation that makes the owned topic clear; use prose, tables, or diagrams without turning any of them into a shadow copy of a more authoritative source.
+
 Read only the references required for the requested operation:
 
-| Operation                                                             | References                                                                                                                                |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Narrowly edit a document                                              | [frontmatter.md](references/frontmatter.md)                                                                                               |
-| Create a document or decide whether knowledge belongs in `.dev-docs/` | [placement-rules.md](references/placement-rules.md), [frontmatter.md](references/frontmatter.md)                                          |
-| Substantially update a document                                       | [frontmatter.md](references/frontmatter.md), and [placement-rules.md](references/placement-rules.md) if ownership may change              |
-| Split, merge, move, rename, deprecate, archive, or delete             | [placement-rules.md](references/placement-rules.md), [lifecycle.md](references/lifecycle.md), [frontmatter.md](references/frontmatter.md) |
-| Audit development documentation                                       | [frontmatter.md](references/frontmatter.md), then [audit-checklist.md](references/audit-checklist.md)                                     |
+- **Narrowly edit a document:** Read [frontmatter.md](references/frontmatter.md). Read [content-design.md](references/content-design.md) only when body structure or representation changes.
+- **Create a document or decide whether knowledge belongs in `.dev-docs/`:** Read [placement-rules.md](references/placement-rules.md), [frontmatter.md](references/frontmatter.md), and [content-design.md](references/content-design.md).
+- **Substantially update a document:** Read [frontmatter.md](references/frontmatter.md) and [content-design.md](references/content-design.md). Also read [placement-rules.md](references/placement-rules.md) if ownership may change.
+- **Split, merge, move, rename, deprecate, archive, or delete:** Read [placement-rules.md](references/placement-rules.md), [lifecycle.md](references/lifecycle.md), and [frontmatter.md](references/frontmatter.md). Also read [content-design.md](references/content-design.md) when body structure or representation changes.
+- **Audit development documentation:** Read [frontmatter.md](references/frontmatter.md) and [content-design.md](references/content-design.md), then [audit-checklist.md](references/audit-checklist.md).
 
 For a narrow edit, read the target document and avoid restructuring neighboring documents unless the change would otherwise create duplication, false ownership, or a misleading current-state claim.
 
@@ -68,12 +70,17 @@ Keep intent, rationale, requirements, current high-level structure, and developm
 
 Preserve one canonical owner for each development-docs topic. Do not turn prose into a shadow copy of code, tests, types, schemas, commands, or configuration.
 
+Do not treat an ignored or untracked `.dev-docs/` directory as confidential storage. Keep credentials, secrets, private user data, and other material that requires a dedicated protected system out of development documents.
+
 ## Completion
 
 - Relevant documents were found through metadata search with a bounded fallback when needed.
 - Each changed or proposed document has one clear purpose and canonical owner.
 - Changed document content and searchable metadata agree.
 - Archived and deprecated material is distinguishable from active guidance.
+- Current, planned, historical, rejected, and unverified content remains distinguishable when relevant.
+- Tables and diagrams clarify a material relationship without duplicating an owning source.
+- Added, changed, or proposed diagrams agree with nearby prose, and their rendering or syntax-check result or validation gap is reported.
 - Material claims were verified proportionately, and remaining uncertainty is explicit.
 - `updated` records the last intentional change to each edited document.
 

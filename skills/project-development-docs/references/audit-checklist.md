@@ -37,6 +37,18 @@ Run the bundled structural validator as specified in [frontmatter.md](frontmatte
 - Are stale documents updated, deprecated, archived, or deleted according to their remaining value?
 - Are unsupported claims and unverified areas visible rather than presented as current fact?
 
+## Content Clarity And Representation
+
+- Does the document make its owned question and current conclusion easy to find?
+- Are current, planned, historical, rejected, and unverified claims distinguishable?
+- Are important boundaries, invariants, non-goals, failure behavior, and uncertainty explicit?
+- Would a table or diagram materially clarify a relationship that is difficult to follow in prose?
+- Does each existing diagram answer one useful question at an appropriate scope?
+- Do diagrams agree with nearby prose and canonical project sources?
+- Is essential meaning available without relying on color, layout, or rendering alone?
+- Do tables or diagrams mechanically duplicate code, schemas, configuration, or generated inventories?
+- Was rendering or syntax verification performed when practical, and are gaps visible?
+
 ## Structure And Lifecycle
 
 - Are independent topics trapped in a catch-all document?
