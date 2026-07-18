@@ -30,18 +30,16 @@ when practical, and state what remains unverified.
 Use these as selection prompts, not mandatory templates. Include only content needed for the
 document's purpose.
 
-| `doc_type`     | Content to consider                                                                                           |
-| -------------- | ------------------------------------------------------------------------------------------------------------- |
-| `product`      | Problem, users, goals, non-goals, scope, and success conditions.                                              |
-| `spec`         | Requirements, non-requirements, acceptance criteria, boundaries, failure behavior, and verification state.    |
-| `architecture` | Context, boundaries, responsibilities, interactions, data flow, invariants, and failure or recovery behavior. |
-| `decision`     | Context, decision drivers, decision, alternatives, consequences, and reconsideration conditions.              |
-| `development`  | Intent, stable workflows, exceptions, and links to the executable sources that own exact commands.            |
-| `testing`      | Risks, test levels, guarantees, exclusions, fixtures, and manual verification needs.                          |
-| `operations`   | Preconditions, execution, verification, stopping conditions, rollback, and recovery.                          |
-| `security`     | Assets, trust boundaries, threats, controls, assumptions, and residual risks.                                 |
-| `glossary`     | Project-specific terms, meanings, and useful relationships without an implementation inventory.               |
-| `reference`    | Stable reference information, its scope, and its relationship to more authoritative sources.                  |
+- **`product`:** Consider the problem, users, goals, non-goals, scope, and success conditions.
+- **`spec`:** Consider requirements, non-requirements, acceptance criteria, boundaries, failure behavior, and verification state.
+- **`architecture`:** Consider context, boundaries, responsibilities, interactions, data flow, invariants, and failure or recovery behavior.
+- **`decision`:** Consider context, decision drivers, the decision, alternatives, consequences, and reconsideration conditions.
+- **`development`:** Consider intent, stable workflows, exceptions, and links to the executable sources that own exact commands.
+- **`testing`:** Consider risks, test levels, guarantees, exclusions, fixtures, and manual verification needs.
+- **`operations`:** Consider preconditions, execution, verification, stopping conditions, rollback, and recovery.
+- **`security`:** Consider assets, trust boundaries, threats, controls, assumptions, and residual risks.
+- **`glossary`:** Consider project-specific terms, meanings, and useful relationships without creating an implementation inventory.
+- **`reference`:** Consider stable reference information, its scope, and its relationship to more authoritative sources.
 
 ## Choose The Smallest Useful Representation
 

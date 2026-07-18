@@ -56,13 +56,11 @@ For new or substantially changed content, distinguish current, planned, historic
 
 Read only the references required for the requested operation:
 
-| Operation                                                             | References                                                                                                                                                                                                                                     |
-| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Narrowly edit a document                                              | [frontmatter.md](references/frontmatter.md), and [content-design.md](references/content-design.md) only when body structure or representation changes                                                                                          |
-| Create a document or decide whether knowledge belongs in `.dev-docs/` | [placement-rules.md](references/placement-rules.md), [frontmatter.md](references/frontmatter.md), [content-design.md](references/content-design.md)                                                                                            |
-| Substantially update a document                                       | [frontmatter.md](references/frontmatter.md), [content-design.md](references/content-design.md), and [placement-rules.md](references/placement-rules.md) if ownership may change                                                                |
-| Split, merge, move, rename, deprecate, archive, or delete             | [placement-rules.md](references/placement-rules.md), [lifecycle.md](references/lifecycle.md), [frontmatter.md](references/frontmatter.md), and [content-design.md](references/content-design.md) when body structure or representation changes |
-| Audit development documentation                                       | [frontmatter.md](references/frontmatter.md), [content-design.md](references/content-design.md), then [audit-checklist.md](references/audit-checklist.md)                                                                                       |
+- **Narrowly edit a document:** Read [frontmatter.md](references/frontmatter.md). Read [content-design.md](references/content-design.md) only when body structure or representation changes.
+- **Create a document or decide whether knowledge belongs in `.dev-docs/`:** Read [placement-rules.md](references/placement-rules.md), [frontmatter.md](references/frontmatter.md), and [content-design.md](references/content-design.md).
+- **Substantially update a document:** Read [frontmatter.md](references/frontmatter.md) and [content-design.md](references/content-design.md). Also read [placement-rules.md](references/placement-rules.md) if ownership may change.
+- **Split, merge, move, rename, deprecate, archive, or delete:** Read [placement-rules.md](references/placement-rules.md), [lifecycle.md](references/lifecycle.md), and [frontmatter.md](references/frontmatter.md). Also read [content-design.md](references/content-design.md) when body structure or representation changes.
+- **Audit development documentation:** Read [frontmatter.md](references/frontmatter.md) and [content-design.md](references/content-design.md), then [audit-checklist.md](references/audit-checklist.md).
 
 For a narrow edit, read the target document and avoid restructuring neighboring documents unless the change would otherwise create duplication, false ownership, or a misleading current-state claim.
 
