@@ -45,6 +45,7 @@ function issue(file, field, code, message) {
 
 function collectMarkdownFiles(root) {
   const files = [];
+  const errors = [];
 
   function visit(directory) {
     const entries = readdirSync(directory, { withFileTypes: true }).sort((left, right) =>
@@ -53,7 +54,16 @@ function collectMarkdownFiles(root) {
 
     for (const entry of entries) {
       const path = resolve(directory, entry.name);
-      if (entry.isDirectory()) {
+      if (entry.isSymbolicLink()) {
+        errors.push(
+          issue(
+            toPosixPath(relative(root, path)),
+            "path",
+            "unsupported-symbolic-link",
+            "symbolic links and junctions are not supported under .dev-docs",
+          ),
+        );
+      } else if (entry.isDirectory()) {
         visit(path);
       } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".md")) {
         files.push(path);
@@ -62,7 +72,7 @@ function collectMarkdownFiles(root) {
   }
 
   visit(root);
-  return files;
+  return { files, errors };
 }
 
 function parseFrontmatter(file, root) {
@@ -97,6 +107,7 @@ function parseFrontmatter(file, root) {
   }
 
   const metadata = {};
+  const seenFields = new Set();
 
   for (let index = 1; index < closingDelimiter; index += 1) {
     const line = lines[index];
@@ -116,15 +127,16 @@ function parseFrontmatter(file, root) {
     }
 
     const [, key, source] = match;
-    if (Object.hasOwn(metadata, key)) {
-      errors.push(issue(fileName, key, "duplicate-field", "must appear at most once"));
-      continue;
-    }
-
     if (!ALLOWED_FIELDS.has(key)) {
       errors.push(issue(fileName, key, "unknown-field", "is not supported by the metadata schema"));
       continue;
     }
+
+    if (seenFields.has(key)) {
+      errors.push(issue(fileName, key, "duplicate-field", "must appear at most once"));
+      continue;
+    }
+    seenFields.add(key);
 
     try {
       metadata[key] = JSON.parse(source);
@@ -141,7 +153,7 @@ function parseFrontmatter(file, root) {
   }
 
   for (const field of REQUIRED_FIELDS) {
-    if (!Object.hasOwn(metadata, field)) {
+    if (!seenFields.has(field)) {
       errors.push(issue(fileName, field, "missing-field", "is required"));
     }
   }
@@ -383,11 +395,12 @@ export function validateDevDocs(rootPath) {
   }
 
   const rootIdentity = fileIdentity(root);
-  const documents = collectMarkdownFiles(root).map((file) => parseFrontmatter(file, root));
+  const collection = collectMarkdownFiles(root);
+  const documents = collection.files.map((file) => parseFrontmatter(file, root));
   const documentsByPath = new Map(
     documents.map((document) => [fileIdentity(document.file), document]),
   );
-  const errors = documents.flatMap((document) => document.errors);
+  const errors = [...collection.errors, ...documents.flatMap((document) => document.errors)];
   const warnings = [];
 
   for (const document of documents) {

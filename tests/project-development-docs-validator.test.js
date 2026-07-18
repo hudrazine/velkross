@@ -83,7 +83,7 @@ test("accepts the supported metadata schema and valid document references", () =
   });
 });
 
-test("reports malformed, missing, unknown, and invalid metadata fields", () => {
+test("reports malformed, unknown, and invalid metadata fields without calling them missing", () => {
   withTemporaryDirectory((directory) => {
     const root = join(directory, ".dev-docs");
     writeDocument(
@@ -104,13 +104,36 @@ test("reports malformed, missing, unknown, and invalid metadata fields", () => {
     expect(codes).toEqual(
       expect.arrayContaining([
         "invalid-value-syntax",
-        "missing-field",
         "invalid-enum",
         "invalid-date",
         "duplicate-array-entry",
         "unknown-field",
       ]),
     );
+    expect(codes).not.toContain("missing-field");
+  });
+});
+
+test("detects duplicate fields after an invalid first value", () => {
+  withTemporaryDirectory((directory) => {
+    const root = join(directory, ".dev-docs");
+    writeDocument(
+      root,
+      "duplicate-after-invalid.md",
+      [
+        "summary: unquoted summary",
+        'summary: "A valid but duplicate summary."',
+        'doc_type: "architecture"',
+        'status: "active"',
+        'updated: "2026-07-14"',
+      ].join("\n"),
+    );
+
+    const summaryCodes = validateDevDocs(root)
+      .errors.filter(({ field }) => field === "summary")
+      .map(({ code }) => code);
+
+    expect(summaryCodes).toEqual(["invalid-value-syntax", "duplicate-field"]);
   });
 });
 
@@ -134,6 +157,92 @@ test("requires updated metadata", () => {
         file: "missing-updated.md",
       }),
     );
+  });
+});
+
+test("accepts a byte-order mark before valid frontmatter", () => {
+  withTemporaryDirectory((directory) => {
+    const root = join(directory, ".dev-docs");
+    mkdirSync(root, { recursive: true });
+    writeFileSync(
+      join(root, "bom.md"),
+      `\uFEFF---\n${validFrontmatter({ summary: "Accepts a byte-order mark." })}\n---\n`,
+      "utf8",
+    );
+
+    expect(validateDevDocs(root)).toMatchObject({ documentCount: 1, errors: [], warnings: [] });
+  });
+});
+
+test("reports multiline summaries", () => {
+  withTemporaryDirectory((directory) => {
+    const root = join(directory, ".dev-docs");
+    writeDocument(
+      root,
+      "multiline-summary.md",
+      validFrontmatter({ summary: "First line\nSecond line" }),
+    );
+
+    expect(validateDevDocs(root).errors).toContainEqual(
+      expect.objectContaining({
+        code: "multiline-summary",
+        field: "summary",
+        file: "multiline-summary.md",
+      }),
+    );
+  });
+});
+
+test("reports unclosed frontmatter", () => {
+  withTemporaryDirectory((directory) => {
+    const root = join(directory, ".dev-docs");
+    mkdirSync(root, { recursive: true });
+    writeFileSync(
+      join(root, "unclosed.md"),
+      ["---", 'summary: "Has no closing delimiter."'].join("\n"),
+      "utf8",
+    );
+
+    expect(validateDevDocs(root).errors).toEqual([
+      expect.objectContaining({
+        code: "unclosed-frontmatter",
+        field: "frontmatter",
+        file: "unclosed.md",
+      }),
+    ]);
+  });
+});
+
+test("rejects symbolic-link entries instead of silently skipping documents", () => {
+  withTemporaryDirectory((directory) => {
+    const root = join(directory, ".dev-docs");
+    writeDocument(
+      root,
+      "real/current.md",
+      validFrontmatter({ summary: "Explains current guidance." }),
+    );
+    symlinkSync(
+      join(root, "real"),
+      join(root, "linked"),
+      process.platform === "win32" ? "junction" : "dir",
+    );
+
+    if (process.platform !== "win32") {
+      symlinkSync(join(root, "real/current.md"), join(root, "linked.md"), "file");
+    }
+
+    const result = validateDevDocs(root);
+    const symlinkErrors = result.errors.filter(({ code }) => code === "unsupported-symbolic-link");
+
+    expect(result.documentCount).toBe(1);
+    expect(symlinkErrors).toContainEqual(
+      expect.objectContaining({ file: "linked", field: "path" }),
+    );
+    if (process.platform !== "win32") {
+      expect(symlinkErrors).toContainEqual(
+        expect.objectContaining({ file: "linked.md", field: "path" }),
+      );
+    }
   });
 });
 
@@ -274,6 +383,45 @@ test("allows superseded_by only on deprecated or archived documents", () => {
 
     expect(errors).toHaveLength(2);
     expect(errors.map(({ file }) => file)).toEqual(["active.md", "draft.md"]);
+  });
+});
+
+test("does not cascade supersession errors from missing or invalid source status", () => {
+  withTemporaryDirectory((directory) => {
+    const root = join(directory, ".dev-docs");
+    writeDocument(
+      root,
+      "replacement.md",
+      validFrontmatter({ summary: "Explains the replacement architecture." }),
+    );
+    writeDocument(
+      root,
+      "missing-status.md",
+      [
+        'summary: "Omits the source status."',
+        'doc_type: "architecture"',
+        'updated: "2026-07-14"',
+        'superseded_by: "replacement.md"',
+      ].join("\n"),
+    );
+    writeDocument(
+      root,
+      "invalid-status.md",
+      validFrontmatter({
+        summary: "Uses an invalid source status.",
+        status: "unknown",
+        extra: ['superseded_by: "replacement.md"'],
+      }),
+    );
+
+    const errorsByFile = Map.groupBy(validateDevDocs(root).errors, ({ file }) => file);
+
+    expect(errorsByFile.get("missing-status.md")).toEqual([
+      expect.objectContaining({ code: "missing-field", field: "status" }),
+    ]);
+    expect(errorsByFile.get("invalid-status.md")).toEqual([
+      expect.objectContaining({ code: "invalid-enum", field: "status" }),
+    ]);
   });
 });
 
