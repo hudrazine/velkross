@@ -57,7 +57,7 @@ Velkross skills are on-demand workflows that complement Trust-Preserving Softwar
 
 Use this when shared understanding should be established before acting.
 
-- `alignment-interview`: Elicit and organize context, resolve decisions, and confirm shared understanding one question at a time.
+- `alignment-interview`: Elicit and organize context, resolve decisions, and show progress through dependency-aware question rounds.
 
 ### Build and verify
 

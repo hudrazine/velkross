@@ -1,4 +1,4 @@
 interface:
   display_name: "Alignment Interview"
-  short_description: "Build shared understanding one question at a time"
-  default_prompt: "Build shared understanding with me one question at a time before we act using"
+  short_description: "Align with adaptive questions and visible progress"
+  default_prompt: "Before we act, build shared understanding with me through adaptive question rounds and visible progress using"
